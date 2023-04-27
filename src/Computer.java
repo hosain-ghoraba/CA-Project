@@ -3,17 +3,12 @@ import java.util.LinkedList;
 
 public class Computer {
 
-    int [] memory ;
+    int [] memory ; 
+    int instructions_count_in_memory; // number of instructions in memory, to be set while parsing the assembly file
     int[] registerFile; // R0 to R31
     int PC ;
     int currentCycle;
     
-    // the sole purpose of creating the below 4 lists is to be able to answer questions (c) and (d) in the required printings in the project description
-    LinkedList <Integer> indecies_of_updated_Registers; // to be filled in the methods in the Instruction class, to keep track of the registers that have been updated in the current cycle, to print them in printPartialRequirements()
-    LinkedList <Integer> old_values_of_updated_Registers; // to be filled in the methods in the Instruction class, to keep track of the values of the registers that have been updated in the current cycle, to print them in printPartialRequirements()
-    LinkedList <Integer> indecies_of_updated_Memory_locations; // to keep track of the memory locations that have been updated in the current cycle, to print them in printPartialRequirements()
-    LinkedList <Integer> old_values_of_updated_Memory_locations; // to keep track of the values of the memory locations that have been updated in the current cycle, to print them in printPartialRequirements()
-
     Instruction Instruction_in_Fetch_Stage;
     Instruction Instruction_in_Decode_Stage;
     Instruction Instruction_in_Execute_Stage;
@@ -21,24 +16,25 @@ public class Computer {
     Instruction Instruction_in_Writeback_Stage;
 
     public Computer() {
-        memory = new int[1024];
+        memory = new int[2048];
         registerFile = new int[32];
         PC = 0;
         currentCycle = 0 ; 
-        indecies_of_updated_Registers = new LinkedList<Integer>();
-        old_values_of_updated_Registers = new LinkedList<Integer>();
-        indecies_of_updated_Memory_locations = new LinkedList<Integer>();
-        old_values_of_updated_Memory_locations = new LinkedList<Integer>();
     }
 
+    private void run(String filePath) throws ComputerException{
+        loadProgramIntoMemory(filePath);
+        int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );
+        for(int i = 0 ; i < maxClocks ; i++)
+            Tickle_Clock();
+        printFinalRequirements();    
+    }
+    private void loadProgramIntoMemory(String assemblyCode_filePath) {
+    }
     private void Tickle_Clock()throws ComputerException {
         currentCycle++;
         process_PipeLine();      
-        printPartialRequirements();
-        indecies_of_updated_Registers.clear();
-        old_values_of_updated_Registers.clear();
-        indecies_of_updated_Memory_locations.clear();
-        old_values_of_updated_Memory_locations.clear();
+        
     }   
     private void process_PipeLine() throws ComputerException {
 
@@ -49,7 +45,6 @@ public class Computer {
             {
                 Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);
                 Instruction_in_Writeback_Stage = null;
-
             }
 
         }
@@ -111,22 +106,18 @@ public class Computer {
 
         }
     }
-    private void printPartialRequirements() // things that are required to be printed after each single cycle
-    {
-       //PrintWriter pw = new PrintWriter(System.out); // 
-
-    }
     public Instruction peek_Next_Instruction_from_memory() {// just reeds the next instruction to be fetched without incrementing the PC
-        if(PC > 1023)
+        if(PC >= instructions_count_in_memory)
             return null;
         return new Instruction(memory[PC]);    
     }   
-    public int getRegister(int index) {
-        return registerFile[index];
-    }
-    public void setRegister(int index, int value) {
-        if(index != 0) // to prevent writing into the ZERO register
-            registerFile[index] = value;
+    public void printFinalRequirements() // things that are required to be printed after the last cycle
+    {
+        System.out.println("Program finished execution after " + currentCycle + ", following are the final values :");
+        for(int i = 0 ; i < registerFile.length ; i++)
+            System.out.println("R" + i + " : " + registerFile[i]);
+        for(int i = 0 ; i < memory.length ; i++)
+            System.out.println("Memory" + "[" + i + "]" + " : " + memory[i]);
     }
     public static void main(String[] args) {
         System.out.println("Hello, World!");

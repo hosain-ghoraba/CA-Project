@@ -10,7 +10,14 @@ public  class Instruction {
     public int getopcode() { 
         return value >> 28;
     }
-    
+    public int getRegister(int index,Computer computer) { 
+        return computer.registerFile[index];
+    }
+    public void setRegister(int index, int value,Computer computer) { 
+        if(index != 0) // to prevent writing into the ZERO register
+            computer.registerFile[index] = value;
+    }
+
     public void execute_in_FETCH_stage(Computer computer) throws ComputerException{
 
         switch(getopcode()) {
