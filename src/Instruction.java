@@ -1,12 +1,12 @@
 public  class Instruction {
-
+//can add type of instruction 
     int value; // the int value that represents the 32 bits of the instruction after converting from binary to int
     int timeInStage;
     public Instruction(int value) {
         this.value = value;
         this.timeInStage = 0;
     }
-
+    
     public int getopcode() { 
         return value >> 28;
     }
@@ -355,6 +355,7 @@ public  class Instruction {
         
 
     }
+    
 
 
     
