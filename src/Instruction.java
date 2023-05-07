@@ -94,14 +94,21 @@ public  class Instruction {
 
     // ADD 
     public void FETCH_ADD(Computer computer) {
+     DECODE_ADD(computer);
         
 
     }
     public void DECODE_ADD(Computer computer) {
+    	int rd= (value>>23)%31;
+    	int rs1=(value>>18)%31;
+    	int rs2=(value>>13)%31;
+    	EXECUTE_ADD(rd,rs1,rs2,computer);
         
 
     }
-    public void EXECUTE_ADD(Computer computer) {
+    public void EXECUTE_ADD(int rd,int rs1,int rs2,Computer computer) {
+    	int rdval=getRegister(rs1, computer) + getRegister(rs2, computer);
+    	setRegister(rd, rdval, computer);
         
 
     }
@@ -248,15 +255,18 @@ public  class Instruction {
 
     // JMP
     public void FETCH_JMP(Computer computer) {
+    	DECODE_JMP(computer);
         
 
     }
     public void DECODE_JMP(Computer computer) {
+    	EXECUTE_JMP(computer);
         
 
     }
     public void EXECUTE_JMP(Computer computer) {
-        
+    	computer.PC=((computer.PC>>28)<<28) + ((value<<4)>>4);
+    	
 
     }
     public void MEMORY_JMP(Computer computer) {

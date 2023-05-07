@@ -15,7 +15,7 @@ public class Computer {
     Instruction Instruction_in_Memory_Stage;
     Instruction Instruction_in_Writeback_Stage;
 
-    public Computer() {//aloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+    public Computer() {
         memory = new int[2048];
         registerFile = new int[32];
         PC = 0;
@@ -48,7 +48,7 @@ public class Computer {
             }
 
         }
-        //fetch and memory stages cannot be combined!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        
         if(Instruction_in_Memory_Stage != null)
         {
             Instruction_in_Memory_Stage.timeInStage++;
@@ -107,7 +107,7 @@ public class Computer {
 
         }
     }
-    public Instruction peek_Next_Instruction_from_memory() {// just reeds the next instruction to be fetched without incrementing the PC , pc is incremented in the fetch methods
+    public Instruction peek_Next_Instruction_from_memory() {// just reads the next instruction to be fetched without incrementing the PC , pc is incremented in the fetch methods
         if(PC >= instructions_count_in_memory)
             return null;
         return new Instruction(memory[PC]);    
