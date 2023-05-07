@@ -99,9 +99,9 @@ public  class Instruction {
 
     }
     public void DECODE_ADD(Computer computer) {
-    	int rd= (value>>23)%31;
-    	int rs1=(value>>18)%31;
-    	int rs2=(value>>13)%31;
+    	int rd= ((value<<4)>>27);
+    	int rs1=(value<<9)>>27;
+    	int rs2=(value<<14)>>27;
     	EXECUTE_ADD(rd,rs1,rs2,computer);
         
 
