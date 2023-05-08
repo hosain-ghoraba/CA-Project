@@ -348,19 +348,25 @@ public  class Instruction {
 
     }
     public void DECODE_MOVR(Computer computer) {
-        
+    	int r1= ((value<<4)>>27);
+    	int r2=(value<<9)>>27;
+    	int address=(value<<14)>>14;
+    	EXECUTE_JEQ(r1,r2,address,computer);
+
 
     }
-    public void EXECUTE_MOVR(Computer computer) {
-        
+    public void EXECUTE_MOVR(int r1,int r2,int a,Computer computer) {
+        int address=r2+a;
+        MEMORY_MOVR(r1,address,computer);
 
     }
-    public void MEMORY_MOVR(Computer computer) {
-        
+    public void MEMORY_MOVR(int r1,int address ,Computer computer) {
+        int x= computer.memory[address];
+        WRITEBACK_MOVR( r1,x,computer);
 
     }
-    public void WRITEBACK_MOVR(Computer computer) {
-        
+    public void WRITEBACK_MOVR(int r1,int x,Computer computer) {
+        computer.registerFile[r1]=x;
 
     }
 
@@ -370,15 +376,18 @@ public  class Instruction {
 
     }
     public void DECODE_MOVM(Computer computer) {
-        
+    	int r1= ((value<<4)>>27);
+    	int r2=(value<<9)>>27;
+    	int address=(value<<14)>>14;
+    	EXECUTE_JEQ(r1,r2,address,computer);
 
     }
-    public void EXECUTE_MOVM(Computer computer) {
-        
-
+    public void EXECUTE_MOVM(int r1,int r2,int a,Computer computer) {
+    	int address=r2+a;
+    	MEMORY_MOVM(r1,address,computer);
     }
-    public void MEMORY_MOVM(Computer computer) {
-        
+    public void MEMORY_MOVM(int r1,int address ,Computer computer) {
+        computer.memory[address]=r1;
 
     }
     public void WRITEBACK_MOVM(Computer computer) {
