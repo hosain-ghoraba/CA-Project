@@ -127,11 +127,15 @@ public  class Instruction {
 
     }
     public void DECODE_SUB(Computer computer) {
-        
+    	int rd= ((value<<4)>>27);
+    	int rs1=(value<<9)>>27;
+    	int rs2=(value<<14)>>27;
+    	EXECUTE_SUB(rd,rs1,rs2,computer);
 
     }
-    public void EXECUTE_SUB(Computer computer) {
-        
+    public void EXECUTE_SUB(int rd,int rs1,int rs2,Computer computer) {
+    	int rdval=getRegister(rs1, computer) - getRegister(rs2, computer);
+    	setRegister(rd, rdval, computer);
 
     }
     public void MEMORY_SUB(Computer computer) {
@@ -145,15 +149,19 @@ public  class Instruction {
 
     // MUL
     public void FETCH_MUL(Computer computer) {
-        
+    	int rd= ((value<<4)>>27);
+    	int rs1=(value<<9)>>27;
+    	int rs2=(value<<14)>>27;
+    	EXECUTE_MUL(rd,rs1,rs2,computer);
 
     }
     public void DECODE_MUL(Computer computer) {
         
 
     }
-    public void EXECUTE_MUL(Computer computer) {
-        
+    public void EXECUTE_MUL(int rd,int rs1,int rs2,Computer computer) {
+    	int rdval=getRegister(rs1, computer) *getRegister(rs2, computer);
+    	setRegister(rd, rdval, computer);
 
     }
     public void MEMORY_MUL(Computer computer) {
@@ -211,15 +219,21 @@ public  class Instruction {
 
     // AND
     public void FETCH_AND(Computer computer) {
-        
+    	
+
 
     }
     public void DECODE_AND(Computer computer) {
-        
+    	int rd= ((value<<4)>>27);
+    	int rs1=(value<<9)>>27;
+    	int rs2=(value<<14)>>27;
+    	EXECUTE_AND(rd,rs1,rs2,computer);
 
     }
-    public void EXECUTE_AND(Computer computer) {
-        
+    public void EXECUTE_AND(int rd,int rs1,int rs2,Computer computer) {
+    	int rdval=getRegister(rs1, computer) &getRegister(rs2, computer);
+    	setRegister(rd, rdval, computer);
+
 
     }
     public void MEMORY_AND(Computer computer) {
