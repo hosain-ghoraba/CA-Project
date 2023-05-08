@@ -201,11 +201,17 @@ public  class Instruction {
 
     }
     public void DECODE_JEQ(Computer computer) {
-        
+    	int r1= ((value<<4)>>27);
+    	int r2=(value<<9)>>27;
+    	int jump=(value<<14)>>14;
+    	EXECUTE_JEQ(r1,r2,jump,computer);
 
     }
-    public void EXECUTE_JEQ(Computer computer) {
-        
+    public void EXECUTE_JEQ(int r1,int r2,int j,Computer computer) {
+        if(r1==r2) {
+        	computer.PC=computer.PC+1+j;
+        	
+        }
 
     }
     public void MEMORY_JEQ(Computer computer) {
