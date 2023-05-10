@@ -138,6 +138,7 @@ public  class Instruction {
     	setRegister(rd, rdval, computer);
 
     }
+    //hello
     public void MEMORY_SUB(Computer computer) {
         
 
