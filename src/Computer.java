@@ -14,8 +14,8 @@ public class Computer {
     Instruction Instruction_in_Execute_Stage;
     Instruction Instruction_in_Memory_Stage;
     Instruction Instruction_in_Writeback_Stage;
-    int[] fetch;
-    int[] decode;
+    //int[] fetch;
+    //int[] decode;
     int[] execute;
     int[] memorystage;
     int[] wb;
@@ -26,8 +26,8 @@ public class Computer {
         registerFile = new int[32];
         PC = 0;
         currentCycle = 0 ;
-        fetch=new int[5];
-        decode=new int[5];
+      //  fetch=new int[5];
+       // decode=new int[5];
         memorystage=new int[3];
         execute=new int[5];
         wb=new int[3];
