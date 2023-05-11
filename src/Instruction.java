@@ -144,7 +144,7 @@ public  class Instruction {
         
         case 11: 
         	res=getRegister(computer.execute[2], computer)+computer.execute[3];
-        	computer.memorystage[1]=computer.execute[1];
+        	computer.memorystage[1]=getRegister(computer.execute[1], computer);
             computer.memorystage[2]=res;
         	break;
         default: throw new ComputerException("opcode for instruction " + value + " is not valid");
@@ -164,7 +164,8 @@ public  class Instruction {
             	
             	
             	break;
-            case 11: 
+            case 11:
+            	computer.memory[computer.memorystage[2]]=computer.memorystage[1];
             	
             	break;
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
@@ -172,18 +173,14 @@ public  class Instruction {
     }
     public void execute_in_WRITEBACK_stage(Computer computer)throws ComputerException{
         switch(getopcode()) {
-            case 0: WRITEBACK_ADD(computer); break;
-            case 1: WRITEBACK_SUB(computer); break;
-            case 2: WRITEBACK_MUL(computer); break;
-            case 3: WRITEBACK_MOVI(computer); break;
-            case 4: WRITEBACK_JEQ(computer); break;
-            case 5: WRITEBACK_AND(computer); break;
-            case 6: WRITEBACK_XORI(computer); break;
-            case 7: WRITEBACK_JMP(computer); break;
-            case 8: WRITEBACK_LSL(computer); break;
-            case 9: WRITEBACK_LSR(computer); break;
-            case 10: WRITEBACK_MOVR(computer); break;
-            case 11: WRITEBACK_MOVM(computer); break;
+            case 0:  case 1: case 2:case 3:case 5:case 6:case 8:case 9:case 10: 
+            	computer.registerFile[computer.wb[1]]=computer.wb[2]; 
+            	break;
+           
+            case 4:case 7: case 11:  break;
+            
+           
+             
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
         }
     }

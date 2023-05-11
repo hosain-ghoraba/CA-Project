@@ -30,7 +30,7 @@ public class Computer {
         decode=new int[5];
         memorystage=new int[3];
         execute=new int[5];
-        wb=new int[5];
+        wb=new int[3];
 
 
       
