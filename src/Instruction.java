@@ -19,8 +19,10 @@ public  class Instruction {
     }
 
     public void execute_in_FETCH_stage(Computer computer) throws ComputerException{
-
-        switch(getopcode()) {
+         computer.Instruction_in_Fetch_Stage=new Instruction(computer.memory[computer.PC]);
+         computer.PC++;
+       
+    	/*switch(getopcode()) {
             case 0: FETCH_ADD(computer); break;
             case 1: FETCH_SUB(computer); break;
             case 2: FETCH_MUL(computer); break;
@@ -34,42 +36,137 @@ public  class Instruction {
             case 10: FETCH_MOVR(computer); break;
             case 11: FETCH_MOVM(computer); break;
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
-        }
+        }*/
     }
     public void execute_in_DECODE_stage(Computer computer)throws ComputerException{
-        switch(getopcode()) {
-            case 0: DECODE_ADD(computer); break;
-            case 1: DECODE_SUB(computer); break;
-            case 2: DECODE_MUL(computer); break;
-            case 3: DECODE_MOVI(computer); break;
-            case 4: DECODE_JEQ(computer); break;
-            case 5: DECODE_AND(computer); break;
-            case 6: DECODE_XORI(computer); break;
-            case 7: DECODE_JMP(computer); break;
-            case 8: DECODE_LSL(computer); break;
-            case 9: DECODE_LSR(computer); break;
-            case 10: DECODE_MOVR(computer); break;
-            case 11: DECODE_MOVM(computer); break;
+        int r1,r2,r3,shamt,imm,add;
+    	int opcode=computer.Instruction_in_Decode_Stage.value>>28;
+    	computer.execute[0]= opcode;
+    	switch(opcode) {
+            case 0: case 1: case 2: case 5:case 8:case 9:
+            r1= ((value<<4)>>27);
+            r2=(value<<9)>>27;
+            r3=(value<<14)>>27;
+            shamt=(value<<19)>>19;
+            
+            computer.execute[1]= r1;
+            computer.execute[2]=r2 ;
+            computer.execute[3]= r3;
+            computer.execute[4]=shamt;
+            break;
+            
+            case 3: case 4: case 6: case 10 : case 11:
+            	r1= ((value<<4)>>27);
+            	r2=(value<<9)>>27;
+            	imm=(value<<14)>>>14;
+            	 
+                 computer.execute[1]= r1;
+                 computer.execute[2]=r2 ;
+                 computer.execute[3]= imm;
+                 break;
+                 
+            
+            case 7: 
+            	add=(value<<4)>>>4;
+            	
+                computer.execute[1]= add;
+                break;
+            
+           
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
         }
     }
     public void execute_in_EXECUTE_stage(Computer computer)throws ComputerException{
+    	int res;
+    	computer.memorystage[0]=computer.execute[0];
+    	switch(computer.execute[0]) {
+        
+    	case 0: 
+        res=getRegister(computer.execute[2], computer) + getRegister(computer.execute[2], computer);
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
+        break;
+        
+        case 1: 
+        res=getRegister(computer.execute[2], computer) -getRegister(computer.execute[2], computer);
+        computer.memorystage[1]=res;
+        break;
+        
+        case 2: 
+        res=getRegister(computer.execute[2], computer) * getRegister(computer.execute[2], computer);
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
+        break;
+        
+        case 3: 
+        res=computer.execute[3];
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
 
+        break;
+        
+        case 4:
+        if(getRegister(computer.execute[1], computer)==getRegister(computer.execute[2], computer)) {
+        	computer.PC=computer.PC+1+computer.execute[3];
+        }
+        	
+        	 break;
+        case 5:
+        res=getRegister(computer.execute[2], computer) & getRegister(computer.execute[3], computer);
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
+        break;
+        
+        case 6: res=getRegister(computer.execute[2], computer)^computer.execute[3];
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
+        break;
+        
+        case 7: 
+        computer.PC=(computer.PC>>28)<<28+computer.execute[1];	
+         break;
+        
+        case 8: 
+        	res=getRegister(computer.execute[2], computer)<<computer.execute[4];
+        	computer.memorystage[1]=computer.execute[1];
+            computer.memorystage[2]=res;
+        
+        case 9: 
+        	res=getRegister(computer.execute[2], computer)>>>computer.execute[4];
+        	computer.memorystage[1]=computer.execute[1];
+            computer.memorystage[2]=res;; break;
+        
+        case 10: 
+        	res=getRegister(computer.execute[2], computer)+computer.execute[3];
+        	computer.memorystage[1]=computer.execute[1];
+            computer.memorystage[2]=res;
+        	break;
+        
+        case 11: 
+        	res=getRegister(computer.execute[2], computer)+computer.execute[3];
+        	computer.memorystage[1]=computer.execute[1];
+            computer.memorystage[2]=res;
+        	break;
+        default: throw new ComputerException("opcode for instruction " + value + " is not valid");
     }
+    }
+   
     public void execute_in_MEMORY_stage(Computer computer)throws ComputerException{
-        switch(getopcode()) {
-            case 0: MEMORY_ADD(computer); break;
-            case 1: MEMORY_SUB(computer); break;
-            case 2: MEMORY_MUL(computer); break;
-            case 3: MEMORY_MOVI(computer); break;
-            case 4: MEMORY_JEQ(computer); break;
-            case 5: MEMORY_AND(computer); break;
-            case 6: MEMORY_XORI(computer); break;
-            case 7: MEMORY_JMP(computer); break;
-            case 8: MEMORY_LSL(computer); break;
-            case 9: MEMORY_LSR(computer); break;
-            case 10: MEMORY_MOVR(computer); break;
-            case 11: MEMORY_MOVM(computer); break;
+       computer.wb[0]=computer.memorystage[0];
+    	switch(computer.wb[0]) {
+            case 0:   case 1:   case 2:   case 3:    case 4:  case 5: case 6:case 7: case 8:  case 9: 
+            	computer.wb[1]=computer.memorystage[1];
+            	computer.wb[2]=computer.memorystage[2];
+            	break;
+            case 10:
+            	computer.wb[1]=computer.memorystage[1];
+            	computer.wb[2]=computer.memory[computer.memorystage[2]];
+            	
+            	
+            	break;
+            case 11: 
+            	
+            	break;
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
         }
     }
@@ -99,6 +196,7 @@ public  class Instruction {
 
     }
     public void DECODE_ADD(Computer computer) {
+    
     	int rd= ((value<<4)>>27);
     	int rs1=(value<<9)>>27;
     	int rs2=(value<<14)>>27;
