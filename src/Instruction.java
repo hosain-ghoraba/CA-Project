@@ -172,7 +172,7 @@ public  class Instruction {
         }
     }
     public void execute_in_WRITEBACK_stage(Computer computer)throws ComputerException{
-        switch(getopcode()) {
+        switch(computer.wb[0]) {
             case 0:  case 1: case 2:case 3:case 5:case 6:case 8:case 9:case 10: 
             	computer.registerFile[computer.wb[1]]=computer.wb[2]; 
             	break;
