@@ -19,8 +19,8 @@ public  class Instruction {
     }
 
     public void execute_in_FETCH_stage(Computer computer) throws ComputerException{
-         computer.Instruction_in_Fetch_Stage=new Instruction(computer.memory[computer.PC]);
-         computer.PC++;
+         //computer.Instruction_in_Fetch_Stage=new Instruction(computer.memory[computer.PC]);
+         //computer.PC++;
        
     	/*switch(getopcode()) {
             case 0: FETCH_ADD(computer); break;

@@ -105,7 +105,7 @@ public class Computer {
         if(Instruction_in_Fetch_Stage != null)
         {
             Instruction_in_Fetch_Stage.timeInStage++;
-            if(Instruction_in_Fetch_Stage.timeInStage == 1)
+            if(Instruction_in_Fetch_Stage.timeInStage == 2)
             {
                 Instruction_in_Fetch_Stage.execute_in_FETCH_stage(this);
                 Instruction_in_Decode_Stage = Instruction_in_Fetch_Stage;
@@ -117,14 +117,14 @@ public class Computer {
         }
         else
         {
-            Instruction_in_Fetch_Stage = peek_Next_Instruction_from_memory();
-
+            Instruction_in_Fetch_Stage = fetchNextInstruction();
+            Instruction_in_Fetch_Stage.timeInStage++;
         }
     }
-    public Instruction peek_Next_Instruction_from_memory() {// just reads the next instruction to be fetched without incrementing the PC , pc is incremented in the fetch methods
+    public Instruction fetchNextInstruction() {// just reads the next instruction to be fetched without incrementing the PC , pc is incremented in the fetch methods
         if(PC >= instructions_count_in_memory)
             return null;
-        return new Instruction(memory[PC]);    
+        return new Instruction(memory[PC++]);    
     }   
     public void printFinalRequirements() // things that are required to be printed after the last cycle
     {
