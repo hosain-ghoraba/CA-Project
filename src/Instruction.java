@@ -107,7 +107,10 @@ public  class Instruction {
         
         case 4:
         if(getRegister(computer.execute[1], computer)==getRegister(computer.execute[2], computer)) {
-        	computer.PC=computer.PC+1+computer.execute[3];
+        	computer.PC=computer.PC+computer.execute[3];
+        	
+        	computer.Instruction_in_Fetch_Stage=null;
+            computer.Instruction_in_Decode_Stage=null;
         }
         	
         	 break;
@@ -123,7 +126,10 @@ public  class Instruction {
         break;
         
         case 7: 
-        computer.PC=(computer.PC>>28)<<28+computer.execute[1];	
+        computer.PC=(computer.PC>>28)<<28+computer.execute[1];
+        computer.Instruction_in_Fetch_Stage=null;
+        computer.Instruction_in_Decode_Stage=null;
+        computer.fetchnow=2;
          break;
         
         case 8: 

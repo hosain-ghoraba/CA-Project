@@ -8,6 +8,7 @@ public class Computer {
     int[] registerFile; // R0 to R31
     int PC ;
     int currentCycle;
+    int fetchnow;
     
     Instruction Instruction_in_Fetch_Stage;
     Instruction Instruction_in_Decode_Stage;
@@ -26,6 +27,7 @@ public class Computer {
         registerFile = new int[32];
         PC = 0;
         currentCycle = 0 ;
+        fetchnow=0;
       //  fetch=new int[5];
        // decode=new int[5];
         memorystage=new int[3];
@@ -39,6 +41,7 @@ public class Computer {
     private void run(String filePath) throws ComputerException{
         loadProgramIntoMemory(filePath);
         int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );
+        
         for(int i = 0 ; i < maxClocks ; i++)
             Tickle_Clock();
         printFinalRequirements();    
@@ -63,12 +66,13 @@ public class Computer {
 
         }
         
-        if(Instruction_in_Memory_Stage != null)
+        if(Instruction_in_Memory_Stage != null && Instruction_in_Fetch_Stage==null)
         {
             Instruction_in_Memory_Stage.timeInStage++;
             if(Instruction_in_Memory_Stage.timeInStage == 1)
             {
                 Instruction_in_Memory_Stage.execute_in_MEMORY_stage(this);
+                //should print here
                 Instruction_in_Writeback_Stage = Instruction_in_Memory_Stage;
                 Instruction_in_Writeback_Stage.timeInStage = 0;
                 Instruction_in_Memory_Stage = null;
@@ -82,6 +86,7 @@ public class Computer {
             if(Instruction_in_Execute_Stage.timeInStage == 2)
             {
                 Instruction_in_Execute_Stage.execute_in_EXECUTE_stage(this);
+                //should print here
                 Instruction_in_Memory_Stage = Instruction_in_Execute_Stage;
                 Instruction_in_Memory_Stage.timeInStage = 0;
                 Instruction_in_Execute_Stage = null;
@@ -95,6 +100,7 @@ public class Computer {
             if(Instruction_in_Decode_Stage.timeInStage == 2)
             {
                 Instruction_in_Decode_Stage.execute_in_DECODE_stage(this);
+                //should print here
                 Instruction_in_Execute_Stage = Instruction_in_Decode_Stage;
                 Instruction_in_Execute_Stage.timeInStage = 0;
                 Instruction_in_Decode_Stage = null;
@@ -102,7 +108,9 @@ public class Computer {
             }
 
         }
-        if(Instruction_in_Fetch_Stage != null)
+        
+        
+       /* if(Instruction_in_Fetch_Stage != null)
         {
             Instruction_in_Fetch_Stage.timeInStage++;
             if(Instruction_in_Fetch_Stage.timeInStage == 2)
@@ -118,8 +126,19 @@ public class Computer {
         else
         {
             Instruction_in_Fetch_Stage = fetchNextInstruction();
-            Instruction_in_Fetch_Stage.timeInStage++;
+      0      Instruction_in_Fetch_Stage.timeInStage++;
+        }*/
+        
+        if(fetchnow==0) {
+            fetchnow=1;
+            Instruction_in_Fetch_Stage = fetchNextInstruction();
+            //should print here
+            Instruction_in_Decode_Stage=Instruction_in_Fetch_Stage;
+            Instruction_in_Fetch_Stage=null;
+
         }
+        else {fetchnow--;}
+        
     }
     public Instruction fetchNextInstruction() {// just reads the next instruction to be fetched without incrementing the PC , pc is incremented in the fetch methods
         if(PC >= instructions_count_in_memory)
