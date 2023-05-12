@@ -66,7 +66,7 @@ public class Computer {
 
         }
         
-        if(Instruction_in_Memory_Stage != null && Instruction_in_Fetch_Stage==null)
+        if(Instruction_in_Memory_Stage != null )
         {
             Instruction_in_Memory_Stage.timeInStage++;
             if(Instruction_in_Memory_Stage.timeInStage == 1)
