@@ -44,10 +44,10 @@ public  class Instruction {
     	computer.execute[0]= opcode;
     	switch(opcode) {
             case 0: case 1: case 2: case 5:case 8:case 9:
-            r1= ((value<<4)>>27);
-            r2=(value<<9)>>27;
-            r3=(value<<14)>>27;
-            shamt=(value<<19)>>19;
+            r1= ((value<<4)>>>27);
+            r2=(value<<9)>>>27;
+            r3=(value<<14)>>>27;
+            shamt=(value<<19)>>>19;
             
             computer.execute[1]= r1;
             computer.execute[2]=r2 ;
@@ -56,9 +56,9 @@ public  class Instruction {
             break;
             
             case 3: case 4: case 6: case 10 : case 11:
-            	r1= ((value<<4)>>27);
-            	r2=(value<<9)>>27;
-            	imm=(value<<14)>>>14;
+            	r1= ((value<<4)>>>27);
+            	r2=(value<<9)>>>27;
+            	imm=(value<<14)>>14;
             	 
                  computer.execute[1]= r1;
                  computer.execute[2]=r2 ;
@@ -67,7 +67,7 @@ public  class Instruction {
                  
             
             case 7: 
-            	add=(value<<4)>>>4;
+            	add=(value<<4)>>4;
             	
                 computer.execute[1]= add;
                 break;
