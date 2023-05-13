@@ -89,7 +89,8 @@ public  class Instruction {
         
         case 1: 
         res=getRegister(computer.execute[2], computer) -getRegister(computer.execute[3], computer);
-        computer.memorystage[1]=res;
+        computer.memorystage[1]=computer.execute[1];
+        computer.memorystage[2]=res;
         break;
         
         case 2: 
@@ -190,6 +191,16 @@ public  class Instruction {
             default: throw new ComputerException("opcode for instruction " + value + " is not valid");
         }
     }
-
+public static void main(String[] args) throws ComputerException {
+	Computer c = new Computer();
+	c.registerFile[2]=3;
+	c.registerFile[3]=4;
+	c.Instruction_in_Decode_Stage=new Instruction(0b00010000100010000110000000000000);
+	(c.Instruction_in_Decode_Stage).execute_in_DECODE_stage(c);
+	(c.Instruction_in_Decode_Stage).execute_in_EXECUTE_stage(c);
+	(c.Instruction_in_Decode_Stage).execute_in_MEMORY_stage(c);
+	(c.Instruction_in_Decode_Stage).execute_in_WRITEBACK_stage(c);
+	System.out.println(c.registerFile[1]);
+}
 
 }
