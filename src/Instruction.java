@@ -52,6 +52,7 @@ public  class Instruction {
             	add=(value<<4)>>4;
             	
                 computer.execute_Stage_Inputs[1]= add;
+                computer.execute_Stage_Inputs[2]=computer.PC;
                 break;
             
            
@@ -91,9 +92,8 @@ public  class Instruction {
         case 4:
         if(getRegister(computer.execute_Stage_Inputs[1], computer)==getRegister(computer.execute_Stage_Inputs[2], computer)) {
         	computer.PC=computer.PC+computer.execute_Stage_Inputs[3];
-        	
-        	computer.Instruction_in_Fetch_Stage=null;
-            computer.Instruction_in_Decode_Stage=null;
+        	//computer.Instruction_in_Fetch_Stage=null;
+            //computer.Instruction_in_Decode_Stage=null;
         }
         	
         	 break;
@@ -110,8 +110,8 @@ public  class Instruction {
         
         case 7: 
         computer.PC=(computer.PC>>28)<<28+computer.execute_Stage_Inputs[1];
-        computer.Instruction_in_Fetch_Stage=null;
-        computer.Instruction_in_Decode_Stage=null;
+       // computer.Instruction_in_Fetch_Stage=null;
+       // computer.Instruction_in_Decode_Stage=null;
         computer.fetchWaitTime=2;
          break;
         

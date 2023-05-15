@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
+
+
 
 
 public class Computer {
@@ -9,6 +13,8 @@ public class Computer {
     int PC ;
     int currentCycle;
     int fetchWaitTime;
+    
+    
     Instruction[] instructions_already_done_in_pipeline;
     int instrans; //instruction to be translated
 
@@ -48,8 +54,7 @@ public class Computer {
             Tickle_Clock();
         printFinalRequirements();    
     }
-    private void loadProgramIntoMemory(String assemblyCode_filePath) {
-    }
+    
     private void Tickle_Clock()throws ComputerException {
         currentCycle++;
         //------------- saving old inputs of each stage, as well as old register file and memory
@@ -71,6 +76,13 @@ public class Computer {
             if(Instruction_in_Writeback_Stage.timeInStage == 1)
             {
                 Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);
+               if(Instruction_in_Writeback_Stage.getopcode()==7||Instruction_in_Writeback_Stage.getopcode()==4) {//handling flush of instruction in case of jump
+            	   Instruction_in_Decode_Stage=null;
+            	   Instruction_in_Execute_Stage=null;
+            	   //Instruction_in_Memory_Stage=null;
+            	   
+            	   
+               }
                 instructions_already_done_in_pipeline[4] = Instruction_in_Writeback_Stage ;
                 Instruction_in_Writeback_Stage = null;
             }
@@ -237,9 +249,10 @@ public class Computer {
                     break;
                 case "J":
                     System.out.print("ALU src1 (offset) = " + oldInputsOfExecuteStage[1]);
-                    System.out.print("ALU src2 (PC) = " + PC);
-                    int addrssToJumpTo = (PC>>28)<<28 + oldInputsOfExecuteStage[1]; // copied from line 112 in instruction class 
-                    // pc already updated it should be : int addrssToJumpTo=pc;
+                    System.out.print("ALU src2 (PC) = " + oldInputsOfExecuteStage[2]);
+                   // int addrssToJumpTo = (PC>>28)<<28 + oldInputsOfExecuteStage[1]; // copied from line 112 in instruction class 
+                    // pc already updated it should be : 
+                    int addrssToJumpTo=PC;
                     System.out.print('\n' + "outputs : ALU result(address to jump to) = " + addrssToJumpTo + ", ");
                     break;
             }
@@ -249,22 +262,37 @@ public class Computer {
         {
             String type = instructions_already_done_in_pipeline[3].getType();
             System.out.print("memory stage input parameters: ");
-            System.out.print("opcode = " + oldInputsOfMemoryStage[0] + ", ");
+          //  System.out.print("opcode = " + oldInputsOfMemoryStage[0] + ", ");
             switch(type)
             {
                 case "R":
-                    System.out.print("r1 = " + oldInputsOfMemoryStage[1] + ", ");
-                    System.out.print("r2 = " + oldInputsOfMemoryStage[2] + ", ");
-                    System.out.print("r3 = " + oldInputsOfMemoryStage[3] + ", ");
-                    System.out.print("shamt = " + oldInputsOfMemoryStage[4]);
+                    System.out.print("no usage");
                     break;
                 case "I":
-                    System.out.print("r1 = " + oldInputsOfMemoryStage[1] + ", ");
-                    System.out.print("r2 = " + oldInputsOfMemoryStage[2] + ", ");
-                    System.out.print("immediate = " + oldInputsOfMemoryStage[3]);
+                	int op= instructions_already_done_in_pipeline[3].getopcode();
+                	 if(op==11) {
+                         //nothing
+                        System.out.println("the value to be written in address:  "+oldInputsOfMemoryStage[2]);
+                        System.out.print('\n' + "outputs :  nothing(since I am writing into memory" );
+                     }
+                	 else if(op==10) {
+                         //nothing
+                        System.out.println("the value to taken is in address:  "+oldInputsOfMemoryStage[2]);
+                        System.out.print('\n' + "outputs : " +"value from memory= " +oldInputsOfWritebackStage[2]+", register to be written into = R"+oldInputsOfWritebackStage[1] );
+                        
+                     }
+                	 else {
+                		 //nothing
+                         System.out.println("no parameters");
+                         System.out.print('\n' + "outputs(there is no actual outputs but it is from execute stage) : "+ "register to be written into : R"+oldInputsOfWritebackStage[1]+"value to be written is:  "+ oldInputsOfWritebackStage[2]);
+
+                		 
+                	 }
+                    
                     break;
                 case "J":
-                    System.out.print("address = " + oldInputsOfMemoryStage[1]);
+                    System.out.println("no parameters");
+
                     break;
             }
             System.out.println();
@@ -283,14 +311,14 @@ public class Computer {
             else if(instructions_already_done_in_pipeline[4].getType().equals("I"))
             {
             	int op= instructions_already_done_in_pipeline[4].getopcode();
-                if(op==3 || op==6 || op==11) {
+                if(op==3 || op==6 || op==10) {
                 	   System.out.println("register to be written into : R"+oldInputsOfWritebackStage[1]);
                        System.out.println("value to be written is:  "+ oldInputsOfWritebackStage[2]);
                        
                 }
                 if(op==4 || op==11) {
                     //nothing
-
+                    System.out.println("no parameters");
                 }
                 
                 
@@ -300,6 +328,8 @@ public class Computer {
             else if(instructions_already_done_in_pipeline[4].getType().equals("J"))
             {
                 //nothing
+                System.out.println("no parameters");
+
             }
         }
         // changes in registerFile and memory
@@ -309,6 +339,13 @@ public class Computer {
         for(int i = 0 ; i < memory.length ; i++)
             if(memory[i] != oldMemory[i])
                 System.out.println("memory " + "[" + i + "] " + "changed from " + oldMemory[i] + " to " + memory[i] + "in memory stage");
+    }
+    private void loadProgramIntoMemory(String assemblyCode_filePath) {
+    	BufferedReader z=new BufferedReader(new InputStreamReader(System.in));
+    	
+    
+    
+    
     }
     public void trans(String s){
 		s=s.toUpperCase();
