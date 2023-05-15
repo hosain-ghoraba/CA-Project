@@ -54,7 +54,7 @@ public class Computer {
         int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );    
         for(int i = 0 ; i < maxClocks ; i++)
             Tickle_Clock();
-        // printFinalRequirements();    
+        printFinalRequirements();    
     }
     
     private void Tickle_Clock()throws ComputerException {
