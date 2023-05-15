@@ -10,7 +10,7 @@ public class Computer {
     int currentCycle;
     int fetchWaitTime;
     Instruction[] instructions_already_done_in_pipeline;
-    int instrans;
+    int instrans; //instruction to be translated
     
     Instruction Instruction_in_Fetch_Stage;
     Instruction Instruction_in_Decode_Stage;
