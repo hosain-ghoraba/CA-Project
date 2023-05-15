@@ -1,3 +1,4 @@
+
 public  class Instruction {
 //can add type of instruction 
     int value; // the int value that represents the 32 bits of the instruction after converting from binary to int
@@ -8,7 +9,7 @@ public  class Instruction {
     }
     
     public int getopcode() { 
-        return value >> 28;
+        return value >>> 28;
     }
     public int getRegister(int index,Computer computer) { 
         return computer.registerFile[index];
@@ -20,7 +21,8 @@ public  class Instruction {
 
     public void execute_in_DECODE_stage(Computer computer)throws ComputerException{
         int r1,r2,r3,shamt,imm,add;
-    	int opcode=computer.Instruction_in_Decode_Stage.value>>28;
+    	int opcode=computer.Instruction_in_Decode_Stage.value>>>28;
+    	
     	computer.execute_Stage_Inputs[0]= opcode;
     	switch(opcode) {
             case 0: case 1: case 2: case 5:case 8:case 9:
@@ -115,8 +117,12 @@ public  class Instruction {
         
         case 8: 
         	res=getRegister(computer.execute_Stage_Inputs[2], computer)<<computer.execute_Stage_Inputs[4];
+        	
+        	//System.out.println("ex "+res);
         	computer.memory_Stage_Inputs[1]=computer.execute_Stage_Inputs[1];
             computer.memory_Stage_Inputs[2]=res;
+         //   System.out.println(computer.memory_Stage_Inputs[2]);
+            break;
         
         case 9: 
         	res=getRegister(computer.execute_Stage_Inputs[2], computer)>>>computer.execute_Stage_Inputs[4];
@@ -143,7 +149,10 @@ public  class Instruction {
     	switch(computer.writeBack_Stage_Inputs[0]) {
             case 0:   case 1:   case 2:   case 3:    case 4:  case 5: case 6:case 7: case 8:  case 9: 
             	computer.writeBack_Stage_Inputs[1]=computer.memory_Stage_Inputs[1];
+              //  System.out.println("cccc"+computer.memory_Stage_Inputs[2]);
+
             	computer.writeBack_Stage_Inputs[2]=computer.memory_Stage_Inputs[2];
+            	//System.out.println("mem  "+computer.writeBack_Stage_Inputs[2]);
             	break;
             case 10:
             	computer.writeBack_Stage_Inputs[1]=computer.memory_Stage_Inputs[1];
@@ -162,6 +171,10 @@ public  class Instruction {
         switch(computer.writeBack_Stage_Inputs[0]) {
             case 0:  case 1: case 2:case 3:case 5:case 6:case 8:case 9:case 10: 
             	computer.registerFile[computer.writeBack_Stage_Inputs[1]]=computer.writeBack_Stage_Inputs[2]; 
+            //	System.out.println("wb   "+computer.writeBack_Stage_Inputs[1]);
+            	//System.out.println(computer.writeBack_Stage_Inputs[2]);
+
+            	
             	break;
            
             case 4:case 7: case 11:  break;
@@ -172,15 +185,29 @@ public  class Instruction {
         }
     }
 public static void main(String[] args) throws ComputerException {
-	Computer c = new Computer();
-	c.registerFile[2]=3;
-	c.registerFile[3]=4;
-	c.Instruction_in_Decode_Stage=new Instruction(0b00010000100010000110000000000000);
-	(c.Instruction_in_Decode_Stage).execute_in_DECODE_stage(c);
-	(c.Instruction_in_Decode_Stage).execute_in_EXECUTE_stage(c);
-	(c.Instruction_in_Decode_Stage).execute_in_MEMORY_stage(c);
-	(c.Instruction_in_Decode_Stage).execute_in_WRITEBACK_stage(c);
-	System.out.println(c.registerFile[1]);
+/*	
+	*/
+	 String s="movm R27 R12 100";
+	 String s1="movi R19 66";
+	// System.out.println(s1.toUpperCase().split(" ",2)[0]);
+	 Computer c = new Computer();
+     c.trans(s);
+     String result = Long.toBinaryString( Integer.toUnsignedLong(c.instrans) | 0x100000000L ).substring(1);
+     
+     
+     System.out.println(result);
+     c.registerFile[27]=70;
+ 	 c.registerFile[12]=1900;
+ 	 c.memory[2000]=78;
+ 	c.Instruction_in_Decode_Stage=new Instruction(c.instrans);
+ 	(c.Instruction_in_Decode_Stage).execute_in_DECODE_stage(c);
+ 	(c.Instruction_in_Decode_Stage).execute_in_EXECUTE_stage(c);
+ 	(c.Instruction_in_Decode_Stage).execute_in_MEMORY_stage(c);
+ 	(c.Instruction_in_Decode_Stage).execute_in_WRITEBACK_stage(c);
+ 	System.out.println(c.registerFile[27]);
+ //	System.out.println(-200>>>16);
+ //	System.out.println(-200<<16);
+     
 }
 
 public String getType() throws ComputerException {

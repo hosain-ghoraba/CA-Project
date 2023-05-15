@@ -10,6 +10,7 @@ public class Computer {
     int currentCycle;
     int fetchWaitTime;
     Instruction[] instructions_already_done_in_pipeline;
+    int instrans;
     
     Instruction Instruction_in_Fetch_Stage;
     Instruction Instruction_in_Decode_Stage;
@@ -241,4 +242,231 @@ public class Computer {
             if(memory[i] != oldMemory[i])
                 System.out.println("memory " + "[" + i + "] " + "changed from " + oldMemory[i] + " to " + memory[i]);
     }
+
+    public void trans(String s){
+		s=s.toUpperCase();
+    	String arr[]= s.split(" ", 2);
+		instrans=0;
+		getOpcode(arr[0],arr[1]);
+		
+		
+	}
+	public void getOpcode(String s,String s1) {
+		int temp;
+		
+		switch(s) {
+		case "ADD":instrans+=0b00000000000000000000000000000000;
+		String arr[]= s1.split(" ",3);
+		getreg1(arr[0]);
+		getreg2(arr[1]);
+		getreg3(arr[2]);		
+		break;
+		
+		case "SUB":instrans+=0b00010000000000000000000000000000;
+		String arrs[]= s1.split(" ",3);
+		getreg1(arrs[0]);
+		getreg2(arrs[1]);
+		getreg3(arrs[2]);
+		break;
+		
+		case "MUL":instrans+=0b00100000000000000000000000000000;
+		String arrm[]= s1.split(" ",3);
+		getreg1(arrm[0]);
+		getreg2(arrm[1]);
+		getreg3(arrm[2]);break;
+		
+		case "MOVI":instrans+=0b00110000000000000000000000000000;
+		String arrmi[]= s1.split(" ",2);
+		getreg1(arrmi[0]);
+		System.out.println(Long.toBinaryString( Integer.toUnsignedLong(instrans) | 0x100000000L ).substring(1));
+		temp=Integer.parseInt(arrmi[1]);//not working adding value is not correct
+		if(temp<0) {
+			temp=(temp<<14)>>>14;
+		}
+		instrans+=temp;break;
+		
+		case "JEQ":instrans+=0b01000000000000000000000000000000;
+		String arrjeq[]= s1.split(" ",3);
+		getreg1(arrjeq[0]);
+		getreg2(arrjeq[1]);
+		temp=Integer.parseInt(arrjeq[2]);
+		if(temp<0) {
+			temp=(temp<<14)>>>14;
+		}
+		
+		instrans+=temp;break;
+		
+		case "AND":instrans+=0b01010000000000000000000000000000;
+		String arrand[]= s1.split(" ",3);
+		getreg1(arrand[0]);
+		getreg2(arrand[1]);
+		getreg3(arrand[2]);break;
+		case "XORI":instrans+=0b01100000000000000000000000000000;
+		String arrx[]= s1.split(" ",3);
+		getreg1(arrx[0]);
+		getreg2(arrx[1]);
+		temp=Integer.parseInt(arrx[2]);
+		if(temp<0) {
+			temp=(temp<<14)>>>14;
+		}
+		instrans+=temp;
+		break;
+		case "JMP":instrans+=0b01110000000000000000000000000000;
+		temp=Integer.parseInt(s1);
+		instrans+=temp;
+		if(temp<0) {
+			temp=(temp<<4)>>>4;
+		}
+		break;
+		case "LSL":instrans+=0b10000000000000000000000000000000;
+		String arrlsl[]= s1.split(" ",3);
+		getreg1(arrlsl[0]);
+		getreg2(arrlsl[1]);
+		temp=Integer.parseInt(arrlsl[2]);
+		instrans+=temp;
+		break;
+		case "LSR":instrans+=0b10010000000000000000000000000000;
+		String arrlsr[]= s1.split(" ",3);
+		getreg1(arrlsr[0]);
+		getreg2(arrlsr[1]);
+		temp=Integer.parseInt(arrlsr[2]);
+		instrans+=temp;
+		break;
+		case "MOVR":instrans+=0b10100000000000000000000000000000;
+		String arrmr[]= s1.split(" ",3);
+		getreg1(arrmr[0]);
+		getreg2(arrmr[1]);
+		temp=Integer.parseInt(arrmr[2]);
+		instrans+=temp;break;
+		case "MOVM":instrans+=0b10110000000000000000000000000000;
+		String arrmm[]= s1.split(" ",3);
+		getreg1(arrmm[0]);
+		getreg2(arrmm[1]);
+		temp=Integer.parseInt(arrmm[2]);
+		instrans+=temp;break;
+		default:
+			
+		}
+		
+		
+		
+	}
+	public void getreg1(String s) {
+		
+		switch(s) {
+		case "R0":instrans+=0b00000000000000000000000000000000;break;
+		case "R1":instrans+=0b00000000100000000000000000000000;break;
+		case "R2":instrans+=0b00000001000000000000000000000000;break;
+		case "R3":instrans+=0b00000001100000000000000000000000;break;
+		case "R4":instrans+=0b00000010000000000000000000000000;break;
+		case "R5":instrans+=0b00000010100000000000000000000000;break;
+		case "R6":instrans+=0b00000011000000000000000000000000;break;
+		case "R7":instrans+=0b00000011100000000000000000000000;break;
+		case "R8":instrans+=0b00000100000000000000000000000000;break;
+		case "R9":instrans+=0b00000100100000000000000000000000;break;
+		case "R10":instrans+=0b00000101000000000000000000000000;break;
+		case "R11":instrans+=0b00000101100000000000000000000000;break;
+		case "R12":instrans+=0b00000110000000000000000000000000;break;
+		case "R13":instrans+=0b00000110100000000000000000000000;break;
+		case "R14":instrans+=0b00000111000000000000000000000000;break;
+		case "R15":instrans+=0b00000111100000000000000000000000;break;
+		case "R16":instrans+=0b00001000000000000000000000000000;break;
+		case "R17":instrans+=0b00001000100000000000000000000000;break;
+		case "R18":instrans+=0b00001001000000000000000000000000;break;
+		case "R19":instrans+=0b00001001100000000000000000000000;break;
+		case "R20":instrans+=0b00001010000000000000000000000000;break;
+		case "R21":instrans+=0b00001010100000000000000000000000;break;
+		case "R22":instrans+=0b00001011000000000000000000000000;break;
+		case "R23":instrans+=0b00001011100000000000000000000000;break;
+		case "R24":instrans+=0b00001100000000000000000000000000;break;
+		case "R25":instrans+=0b00001100100000000000000000000000;break;
+		case "R26":instrans+=0b00001101000000000000000000000000;break;
+		case "R27":instrans+=0b00001101100000000000000000000000;break;
+		case "R28":instrans+=0b00001110000000000000000000000000;break;
+		case "R29":instrans+=0b00001110100000000000000000000000;break;
+		case "R30":instrans+=0b00001111000000000000000000000000;break;
+		case "R31":instrans+=0b00001111100000000000000000000000;break;
+		}
+		
+	}
+public void getreg2(String s) {
+		
+		switch(s) {
+		case "R0":instrans+=(0b00000000000000000000000000000000)>>5;break;
+		case "R1":instrans+=(0b00000000100000000000000000000000)>>5;break;
+		case "R2":instrans+=(0b00000001000000000000000000000000)>>5;break;
+		case "R3":instrans+=(0b00000001100000000000000000000000)>>5;break;
+		case "R4":instrans+=(0b00000010000000000000000000000000)>>5;break;
+		case "R5":instrans+=(0b00000010100000000000000000000000)>>5;break;
+		case "R6":instrans+=(0b00000011000000000000000000000000)>>5;break;
+		case "R7":instrans+=(0b00000011100000000000000000000000)>>5;break;
+		case "R8":instrans+=(0b00000100000000000000000000000000)>>5;break;
+		case "R9":instrans+=(0b00000100100000000000000000000000)>>5;break;
+		case "R10":instrans+=(0b00000101000000000000000000000000)>>5;break;
+		case "R11":instrans+=(0b00000101100000000000000000000000)>>5;break;
+		case "R12":instrans+=(0b00000110000000000000000000000000)>>5;break;
+		case "R13":instrans+=(0b00000110100000000000000000000000)>>5;break;
+		case "R14":instrans+=(0b00000111000000000000000000000000)>>5;break;
+		case "R15":instrans+=(0b00000111100000000000000000000000)>>5;break;
+		case "R16":instrans+=(0b00001000000000000000000000000000)>>5;break;
+		case "R17":instrans+=(0b00001000100000000000000000000000)>>5;break;
+		case "R18":instrans+=(0b00001001000000000000000000000000)>>5;break;
+		case "R19":instrans+=(0b00001001100000000000000000000000)>>5;break;
+		case "R20":instrans+=(0b00001010000000000000000000000000)>>5;break;
+		case "R21":instrans+=(0b00001010100000000000000000000000)>>5;break;
+		case "R22":instrans+=(0b00001011000000000000000000000000)>>5;break;
+		case "R23":instrans+=(0b00001011100000000000000000000000)>>5;break;
+		case "R24":instrans+=(0b00001100000000000000000000000000)>>5;break;
+		case "R25":instrans+=(0b00001100100000000000000000000000)>>5;break;
+		case "R26":instrans+=(0b00001101000000000000000000000000)>>5;break;
+		case "R27":instrans+=(0b00001101100000000000000000000000)>>5;break;
+		case "R28":instrans+=(0b00001110000000000000000000000000)>>5;break;
+		case "R29":instrans+=(0b00001110100000000000000000000000)>>5;break;
+		case "R30":instrans+=(0b00001111000000000000000000000000)>>5;break;
+		case "R31":instrans+=(0b00001111100000000000000000000000)>>5;break;
+		}
+		
+	}
+public void getreg3(String s) {
+	
+	switch(s) {
+	case "R0":instrans+=(0b00000000000000000000000000000000)>>10;break;
+	case "R1":instrans+=(0b00000000100000000000000000000000)>>10;break;
+	case "R2":instrans+=(0b00000001000000000000000000000000)>>10;break;
+	case "R3":instrans+=(0b00000001100000000000000000000000)>>10;break;
+	case "R4":instrans+=(0b00000010000000000000000000000000)>>10;break;
+	case "R5":instrans+=(0b00000010100000000000000000000000)>>10;break;
+	case "R6":instrans+=(0b00000011000000000000000000000000)>>10;break;
+	case "R7":instrans+=(0b00000011100000000000000000000000)>>10;break;
+	case "R8":instrans+=(0b00000100000000000000000000000000)>>10;break;
+	case "R9":instrans+=(0b00000100100000000000000000000000)>>10;break;
+	case "R10":instrans+=(0b00000101000000000000000000000000)>>10;break;
+	case "R11":instrans+=(0b00000101100000000000000000000000)>>10;break;
+	case "R12":instrans+=(0b00000110000000000000000000000000)>>10;break;
+	case "R13":instrans+=(0b00000110100000000000000000000000)>>10;break;
+	case "R14":instrans+=(0b00000111000000000000000000000000)>>10;break;
+	case "R15":instrans+=(0b00000111100000000000000000000000)>>10;break;
+	case "R16":instrans+=(0b00001000000000000000000000000000)>>10;break;
+	case "R17":instrans+=(0b00001000100000000000000000000000)>>10;break;
+	case "R18":instrans+=(0b00001001000000000000000000000000)>>10;break;
+	case "R19":instrans+=(0b00001001100000000000000000000000)>>10;break;
+	case "R20":instrans+=(0b00001010000000000000000000000000)>>10;break;
+	case "R21":instrans+=(0b00001010100000000000000000000000)>>10;break;
+	case "R22":instrans+=(0b00001011000000000000000000000000)>>10;break;
+	case "R23":instrans+=(0b00001011100000000000000000000000)>>10;break;
+	case "R24":instrans+=(0b00001100000000000000000000000000)>>10;break;
+	case "R25":instrans+=(0b00001100100000000000000000000000)>>10;break;
+	case "R26":instrans+=(0b00001101000000000000000000000000)>>10;break;
+	case "R27":instrans+=(0b00001101100000000000000000000000)>>10;break;
+	case "R28":instrans+=(0b00001110000000000000000000000000)>>10;break;
+	case "R29":instrans+=(0b00001110100000000000000000000000)>>10;break;
+	case "R30":instrans+=(0b00001111000000000000000000000000)>>10;break;
+	case "R31":instrans+=(0b00001111100000000000000000000000)>>10;break;
+	}
+	
+}
+
+
+
+
 }   
