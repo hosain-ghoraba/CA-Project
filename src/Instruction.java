@@ -219,4 +219,8 @@ public String getType() throws ComputerException {
         default: throw new ComputerException("opcode for instruction " + value + " is not valid");
     }
 }
+
+public String toString() {
+    return value + "";
+}
 }

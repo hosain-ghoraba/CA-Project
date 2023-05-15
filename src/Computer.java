@@ -1,4 +1,6 @@
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
@@ -47,19 +49,19 @@ public class Computer {
         writeBack_Stage_Inputs=new int[3];
     }
 
-    private void run(String filePath) throws ComputerException{
+    private void run(String filePath) throws ComputerException, IOException{
         loadProgramIntoMemory(filePath);
         int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );    
         for(int i = 0 ; i < maxClocks ; i++)
             Tickle_Clock();
-        printFinalRequirements();    
+        // printFinalRequirements();    
     }
     
     private void Tickle_Clock()throws ComputerException {
         currentCycle++;
         //------------- saving old inputs of each stage, as well as old register file and memory
-        int[] oldInputsOfExecuteStage = memory_Stage_Inputs.clone();
-        int[] oldInputsOfMemoryStage = execute_Stage_Inputs.clone();
+        int[] oldInputsOfExecuteStage = execute_Stage_Inputs.clone();
+        int[] oldInputsOfMemoryStage = memory_Stage_Inputs.clone();
         int[] oldInputsOfWriteBackStage = writeBack_Stage_Inputs.clone();
         int[] oldRegisterFile = registerFile.clone();
         int[] oldMemory = memory.clone();     
@@ -183,20 +185,33 @@ public class Computer {
         for(int i = 0 ; i < memory.length ; i++)
             System.out.println("Memory" + "[" + i + "]" + " : " + memory[i]);
     }
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
+
     // to be continued
     public void printAfterCycle(int[] oldInputsOfExecuteStage, int[] oldInputsOfMemoryStage, int[] oldInputsOfWritebackStage, int[] oldRegisterFile, int[] oldMemory) throws ComputerException{
     
         // cycle number
-        System.out.println("cycle number : " + currentCycle); // cycle number
+        System.out.println("\ncycle number : " + currentCycle); // cycle number
         // Which instruction is being executed at each stage
-        System.out.println("instruction in fetch stage : " + instructions_already_done_in_pipeline[0]); 
-        System.out.println("instruction in decode stage : " + instructions_already_done_in_pipeline[1]);
-        System.out.println("instruction in execute stage : " + instructions_already_done_in_pipeline[2]);
-        System.out.println("instruction in memory stage : " + instructions_already_done_in_pipeline[3]);
-        System.out.println("instruction in writeback stage : " + instructions_already_done_in_pipeline[4]);
+        if(instructions_already_done_in_pipeline[0] != null)
+            System.out.println("instruction in fetch stage : " + instructions_already_done_in_pipeline[0]); 
+        else
+            System.out.println("instruction in fetch stage : " + "null");
+        if(instructions_already_done_in_pipeline[1] != null)
+            System.out.println("instruction in decode stage : " + instructions_already_done_in_pipeline[1]); 
+        else
+            System.out.println("instruction in decode stage : " + "null");
+        if(instructions_already_done_in_pipeline[2] != null)
+            System.out.println("instruction in execute stage : " + instructions_already_done_in_pipeline[2]); 
+        else
+            System.out.println("instruction in execute stage : " + "null");
+        if(instructions_already_done_in_pipeline[3] != null)
+            System.out.println("instruction in memory stage : " + instructions_already_done_in_pipeline[3]); 
+        else
+            System.out.println("instruction in memory stage : " + "null");
+        if(instructions_already_done_in_pipeline[4] != null)
+            System.out.println("instruction in writeback stage : " + instructions_already_done_in_pipeline[4]); 
+        else
+            System.out.println("instruction in writeback stage : " + "null");
         // What are the inputs/outputs for each stage
         System.out.println('\n' + "fetch stage inputs / outputs : ----------------------------");
         if(instructions_already_done_in_pipeline[0] != null)
@@ -335,17 +350,22 @@ public class Computer {
         // changes in registerFile and memory
         for(int i = 0 ; i < registerFile.length ; i++)
             if(registerFile[i] != oldRegisterFile[i])
-                System.out.println("R" + i + "changed from" + oldRegisterFile[i] + " to " + registerFile[i] + " in writeback stage");
+                System.out.println("R" + i + " changed from " + oldRegisterFile[i] + " to " + registerFile[i] + " in writeback stage");
         for(int i = 0 ; i < memory.length ; i++)
             if(memory[i] != oldMemory[i])
-                System.out.println("memory " + "[" + i + "] " + "changed from " + oldMemory[i] + " to " + memory[i] + "in memory stage");
+                System.out.println("memory " + "[" + i + "] " + " changed from " + oldMemory[i] + " to " + memory[i] + " in memory stage");
     }
-    private void loadProgramIntoMemory(String assemblyCode_filePath) {
-    	BufferedReader z=new BufferedReader(new InputStreamReader(System.in));
-    	
-    
-    
-    
+    private void loadProgramIntoMemory(String assemblyCode_filePath) throws IOException {
+    	BufferedReader br = new BufferedReader(new FileReader(assemblyCode_filePath));
+        String line;
+        while (!(line = br.readLine()).equals("")) 
+        {
+            trans(line);
+            System.out.println("instruction " + line + " is translated to " + instrans + " and added to memory");
+            memory[instructions_count_in_memory++] = instrans;
+        }
+        br.close();
+        
     }
     public void trans(String s){
 		s=s.toUpperCase();
@@ -382,7 +402,7 @@ public class Computer {
 		case "MOVI":instrans+=0b00110000000000000000000000000000;
 		String arrmi[]= s1.split(" ",2);
 		getreg1(arrmi[0]);
-		System.out.println(Long.toBinaryString( Integer.toUnsignedLong(instrans) | 0x100000000L ).substring(1));
+		// System.out.println(Long.toBinaryString( Integer.toUnsignedLong(instrans) | 0x100000000L ).substring(1));
 		temp=Integer.parseInt(arrmi[1]);//not working adding value is not correct
 		if(temp<0) {
 			temp=(temp<<14)>>>14;
@@ -570,4 +590,9 @@ public class Computer {
 	
 }
 
+    public static void main(String[] args) throws ComputerException, IOException {
+    Computer computer = new Computer();
+    computer.run("assembly.txt");
+}
 }   
+
