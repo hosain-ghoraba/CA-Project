@@ -238,7 +238,8 @@ public class Computer {
                 case "J":
                     System.out.print("ALU src1 (offset) = " + oldInputsOfExecuteStage[1]);
                     System.out.print("ALU src2 (PC) = " + PC);
-                    int addrssToJumpTo = (PC>>28)<<28 + oldInputsOfExecuteStage[1]; // copied from line 112 in instruction class
+                    int addrssToJumpTo = (PC>>28)<<28 + oldInputsOfExecuteStage[1]; // copied from line 112 in instruction class 
+                    // pc already updated it should be : int addrssToJumpTo=pc;
                     System.out.print('\n' + "outputs : ALU result(address to jump to) = " + addrssToJumpTo + ", ");
                     break;
             }
@@ -270,17 +271,35 @@ public class Computer {
         }
         if(instructions_already_done_in_pipeline[4] != null)
         {
-            if(instructions_already_done_in_pipeline[4].getType().equals("R"))
+            
+        	if(instructions_already_done_in_pipeline[4].getType().equals("R"))
             {
-
+            System.out.println("register to be written into : R"+oldInputsOfWritebackStage[1]);
+            System.out.println("value to be written is:  "+ oldInputsOfWritebackStage[2]);
+            
+            
+            
             }
             else if(instructions_already_done_in_pipeline[4].getType().equals("I"))
             {
+            	int op= instructions_already_done_in_pipeline[4].getopcode();
+                if(op==3 || op==6 || op==11) {
+                	   System.out.println("register to be written into : R"+oldInputsOfWritebackStage[1]);
+                       System.out.println("value to be written is:  "+ oldInputsOfWritebackStage[2]);
+                       
+                }
+                if(op==4 || op==11) {
+                    //nothing
 
+                }
+                
+                
+                
+            
             }
             else if(instructions_already_done_in_pipeline[4].getType().equals("J"))
             {
-
+                //nothing
             }
         }
         // changes in registerFile and memory
