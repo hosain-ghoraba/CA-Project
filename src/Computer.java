@@ -338,7 +338,7 @@ public class Computer {
 
                      break;
             }
-            System.out.println("I am finally free from this world :D");
+            System.out.println("(instruction) : 'hooooof !! I am finally free from this world !! these humans treat me as a mere piece of data ! '");
         }
         System.out.println("\n\nchanges in registerFile and Memory : ----------------------------");
         for(int i = 0 ; i < registerFile.length ; i++)
