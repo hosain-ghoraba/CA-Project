@@ -76,12 +76,18 @@ public class Computer {
             if(Instruction_in_Writeback_Stage.timeInStage == 1)
             {
                 Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);
-               if(Instruction_in_Writeback_Stage.getopcode()==7||Instruction_in_Writeback_Stage.getopcode()==4) {//handling flush of instruction in case of jump
+               if(Instruction_in_Writeback_Stage.getopcode()==7) {//handling flush of instruction in case of jump
             	   Instruction_in_Decode_Stage=null;
             	   Instruction_in_Execute_Stage=null;
             	   //Instruction_in_Memory_Stage=null;
             	   
             	   
+               }
+               if(Instruction_in_Writeback_Stage.getopcode()==4) {
+            	   if(Instruction_in_Writeback_Stage.branch) {
+            		   Instruction_in_Decode_Stage=null;
+                	   Instruction_in_Execute_Stage=null;
+            	   }
                }
                 Instruction_in_Writeback_Stage = null;
             }
@@ -433,10 +439,11 @@ public class Computer {
 		break;
 		case "JMP":instrans+=0b01110000000000000000000000000000;
 		temp=Integer.parseInt(s1);
-		instrans+=temp;
+		
 		if(temp<0) {
 			temp=(temp<<4)>>>4;
 		}
+		instrans+=temp;
 		break;
 		case "LSL":instrans+=0b10000000000000000000000000000000;
 		String arrlsl[]= s1.split(" ",3);

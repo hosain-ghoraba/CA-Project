@@ -3,9 +3,11 @@ public  class Instruction {
 //can add type of instruction 
     int value; // the int value that represents the 32 bits of the instruction after converting from binary to int
     int timeInStage;
+    boolean branch;
     public Instruction(int value) {
         this.value = value;
         this.timeInStage = 0;
+        branch=false;
     }
     
     public int getopcode() { 
@@ -93,6 +95,7 @@ public  class Instruction {
         case 4:
         if(getRegister(computer.execute_Stage_Inputs[1], computer)==getRegister(computer.execute_Stage_Inputs[2], computer)) {
         	computer.PC=computer.execute_Stage_Inputs[4]+computer.execute_Stage_Inputs[3];
+        	branch=true;
         	//computer.Instruction_in_Fetch_Stage=null;
             //computer.Instruction_in_Decode_Stage=null;
         }
@@ -110,7 +113,10 @@ public  class Instruction {
         break;
         
         case 7: 
-        computer.PC=((computer.execute_Stage_Inputs[2]-1)>>>28)<<28+computer.execute_Stage_Inputs[1];
+        computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
+        System.out.println(computer.execute_Stage_Inputs[1]);
+System.out.println(computer.execute_Stage_Inputs[2]);
+        System.out.println(computer.PC);
        // computer.Instruction_in_Fetch_Stage=null;
        // computer.Instruction_in_Decode_Stage=null;
         computer.fetchWaitTime=2;
@@ -186,17 +192,17 @@ public  class Instruction {
         }
     }
 public static void main(String[] args) throws ComputerException {
-/*	
-	*/
-	 String s="movm R27 R12 100";
+	
+	
+	 String s="jmp 2";
 	 String s1="movi R19 66";
 	// System.out.println(s1.toUpperCase().split(" ",2)[0]);
 	 Computer c = new Computer();
      c.trans(s);
      String result = Long.toBinaryString( Integer.toUnsignedLong(c.instrans) | 0x100000000L ).substring(1);
-     
-     
      System.out.println(result);
+     /*    
+   
      c.registerFile[27]=70;
  	 c.registerFile[12]=1900;
  	 c.memory[2000]=78;
@@ -205,7 +211,7 @@ public static void main(String[] args) throws ComputerException {
  	(c.Instruction_in_Decode_Stage).execute_in_EXECUTE_stage(c);
  	(c.Instruction_in_Decode_Stage).execute_in_MEMORY_stage(c);
  	(c.Instruction_in_Decode_Stage).execute_in_WRITEBACK_stage(c);
- 	System.out.println(c.registerFile[27]);
+ 	System.out.println(c.registerFile[27]);*/
  //	System.out.println(-200>>>16);
  //	System.out.println(-200<<16);
      
