@@ -91,7 +91,7 @@ public class Computer {
                }
                 Instruction_in_Writeback_Stage = null;
             }
-
+//;;
         } 
         else
         {
