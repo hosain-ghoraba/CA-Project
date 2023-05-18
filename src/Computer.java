@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Computer {
 
@@ -48,10 +49,13 @@ public class Computer {
 
     private void run(String filePath) throws ComputerException, IOException{
         loadProgramIntoMemory(filePath);
-        int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );    
-        for(int i = 0 ; i < maxClocks ; i++)
-            Tickle_Clock();
-        printFinalRequirements();    
+        int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );
+        while(currentCycle < maxClocks)
+            Tickle_Clock();    
+        // while(PC < instructions_count_in_memory)
+        //     for(int i = 0 ; i < 5 ; i++)             
+        //         Tickle_Clock();
+       // printFinalRequirements();    
     }
     
     private void Tickle_Clock()throws ComputerException {
@@ -197,37 +201,26 @@ public class Computer {
     
         // cycle number
         System.out.println("------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println("\ncycle number : " + currentCycle); // cycle number
+        System.out.println("cycle number : " + currentCycle); // cycle number
         // Which instruction is being executed at each stage
-        if(instructions_already_done_in_pipeline[0] != null)
-            System.out.println("instruction in fetch stage : " + instructions_already_done_in_pipeline[0]); 
-        else
-            System.out.println("instruction in fetch stage : " + "null");
-        if(instructions_already_done_in_pipeline[1] != null)
-            System.out.println("instruction in decode stage : " + instructions_already_done_in_pipeline[1]); 
-        else
-            System.out.println("instruction in decode stage : " + "null");
-        if(instructions_already_done_in_pipeline[2] != null)
-            System.out.println("instruction in execute stage : " + instructions_already_done_in_pipeline[2]); 
-        else
-            System.out.println("instruction in execute stage : " + "null");
-        if(instructions_already_done_in_pipeline[3] != null)
-            System.out.println("instruction in memory stage : " + instructions_already_done_in_pipeline[3]); 
-        else
-            System.out.println("instruction in memory stage : " + "null");
-        if(instructions_already_done_in_pipeline[4] != null)
-            System.out.println("instruction in writeback stage : " + instructions_already_done_in_pipeline[4]); 
-        else
-            System.out.println("instruction in writeback stage : " + "null");
+        
+        System.out.println("instruction in fetch stage : " + instructions_already_done_in_pipeline[0]); 
+        System.out.println("instruction in decode stage : " + instructions_already_done_in_pipeline[1]);
+        System.out.println("instruction in execute stage : " + instructions_already_done_in_pipeline[2]);
+        System.out.println("instruction in memory stage : " + instructions_already_done_in_pipeline[3]);
+        System.out.println("instruction in writeback stage : " + instructions_already_done_in_pipeline[4]);
+
         // What are the inputs/outputs for each stage
-        System.out.println('\n' + "fetch stage inputs / outputs : ----------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("FETCH stage inputs / outputs : ");
         if(instructions_already_done_in_pipeline[0] != null)
         {
             System.out.println("inputs : PC = " + (PC-1));
             System.out.println("outputs : an instruction = " + instructions_already_done_in_pipeline[0]);
         }
 
-        System.out.println('\n' + "decode stage inputs / outputs : ----------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("DECODE stage inputs / outputs : ");
         if(instructions_already_done_in_pipeline[1] != null)
         {
             System.out.println("inputs : instruction = " + instructions_already_done_in_pipeline[1]);
@@ -239,20 +232,21 @@ public class Computer {
                     System.out.print("r1 = " + oldInputsOfExecuteStage[1] + ", ");
                     System.out.print("r2 = " + oldInputsOfExecuteStage[2] + ", ");
                     System.out.print("r3 = " + oldInputsOfExecuteStage[3] + ", ");
-                    System.out.print("shamt = " + oldInputsOfExecuteStage[4]);
+                    System.out.println("shamt = " + oldInputsOfExecuteStage[4]);
                     break;
                 case "I":
                     System.out.print("r1 = " + oldInputsOfExecuteStage[1] + ", ");
                     System.out.print("r2 = " + oldInputsOfExecuteStage[2] + ", ");
-                    System.out.print("immediate = " + oldInputsOfExecuteStage[3]);
+                    System.out.println("immediate = " + oldInputsOfExecuteStage[3]);
                     break;
                 case "J":
-                    System.out.print("address = " + oldInputsOfExecuteStage[1]);
+                    System.out.println("address = " + oldInputsOfExecuteStage[1]);
                     break;
             }
         }
 
-        System.out.println('\n' + "execute stage inputs / outputs : ----------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("EXECUTE stage inputs / outputs : ");
         if(instructions_already_done_in_pipeline[2] != null)
         {
             System.out.print("inputs : ALU Function (opcode) = " + oldInputsOfExecuteStage[0] + ", ");
@@ -261,26 +255,25 @@ public class Computer {
             {
                 case "R": 
                     System.out.print("ALU src 1 (normal register) = " + oldInputsOfExecuteStage[2] + ", ");
-                    System.out.print("ALU src 2 (normal register) = " + oldInputsOfExecuteStage[3] + ", ");
-                    System.out.print('\n' + "outputs : ALU result = " + oldInputsOfMemoryStage[2] + ", ");
+                    System.out.println("ALU src 2 (normal register) = " + oldInputsOfExecuteStage[3] + ", ");
+                    System.out.println("outputs : ALU result = " + oldInputsOfMemoryStage[2] + ", ");
                     break;
                 case "I":
                     System.out.print("ALU src 1 (normal register) = " + oldInputsOfExecuteStage[2] + ", ");
-                    System.out.print("ALU src 2 (immediate value) = " + oldInputsOfExecuteStage[3] + ", ");
-                    System.out.print('\n' + "outputs : ALU result = " + oldInputsOfMemoryStage[2] + ", ");
+                    System.out.println("ALU src 2 (immediate value) = " + oldInputsOfExecuteStage[3] + ", ");
+                    System.out.println("outputs : ALU result = " + oldInputsOfMemoryStage[2] + ", ");
                     break;
                 case "J":
                     System.out.print("ALU src1 (offset) = " + oldInputsOfExecuteStage[1]);
-                    System.out.print("ALU src2 (PC) = " + oldInputsOfExecuteStage[2]);
-                   // int addrssToJumpTo = (PC>>28)<<28 + oldInputsOfExecuteStage[1]; // copied from line 112 in instruction class 
-                    // pc already updated it should be : 
+                    System.out.println("ALU src2 (PC) = " + oldInputsOfExecuteStage[2]);
                     int addrssToJumpTo=PC;
-                    System.out.print('\n' + "outputs : ALU result(address to jump to) = " + addrssToJumpTo);
+                    System.out.println("outputs : ALU result(address to jump to) = " + addrssToJumpTo);
                     break;
             }
         }
         
-        System.out.println('\n' + "memory stage inputs / outputs : ----------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("MEMORY stage inputs / outputs : ");
         if(instructions_already_done_in_pipeline[3] != null)
         {
             String type = instructions_already_done_in_pipeline[3].getType();
@@ -296,35 +289,35 @@ public class Computer {
                      {
                         System.out.print("inputs : ");
                         System.out.print("memory address to be written into :  " + oldInputsOfMemoryStage[2] + ", ");
-                        System.out.print("value to be written is:  " + oldInputsOfMemoryStage[1]);
-                        System.out.print('\n' + "outputs : nothing(since I am writing into memory" );
+                        System.out.println("value to be written is:  " + oldInputsOfMemoryStage[1]);
+                        System.out.println("outputs : nothing(since I am writing into memory" );
                      }
                 	 else if(op==10)
                      {
-                        System.out.print("inputs : memory address to be read from : " + oldInputsOfMemoryStage[2]);
-                        System.out.print('\n' + "outputs : read value from " + "Memory[" +oldInputsOfMemoryStage[2]+ "] is " + oldInputsOfWritebackStage[2] );                      
+                        System.out.println("inputs : memory address to be read from : " + oldInputsOfMemoryStage[2]);
+                        System.out.println("outputs : read value from " + "Memory[" +oldInputsOfMemoryStage[2]+ "] is " + oldInputsOfWritebackStage[2] );                      
                      }
                 	 else 
                      {
-                         System.out.print("inputs : nothing , this is a I type instruction with with opcode " + op + " which doesn't perfrom any writing into memory");
-                         System.out.print('\n' + "outputs : (there is no actual outputs but it is from execute stage, it is just passing by the memory on its way) : "+ "register to be written into : R"+oldInputsOfWritebackStage[1]+" , value to be written is:  "+ oldInputsOfWritebackStage[2]);         		 
+                         System.out.println("inputs : nothing , this is a I type instruction with with opcode " + op + " which doesn't perfrom any writing into memory");
+                         System.out.println("outputs : (there is no actual outputs but it is from execute stage, it is just passing by the memory on its way) : "+ "register to be written into : R"+oldInputsOfWritebackStage[1]+" , value to be written is:  "+ oldInputsOfWritebackStage[2]);         		 
                 	 }              
                      break;
                 case "J":
-                     System.out.print("inputs : nothing , this is a J type instruction");
-                     System.out.print('\n' + "outputs : nothing , this is a J type instruction");
+                     System.out.println("inputs : nothing , this is a J type instruction");
+                     System.out.println("outputs : nothing , this is a J type instruction");
                      break;
             }
         }
-        System.out.println('\n' + "writeback stage inputs / outputs : ----------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("WRITEBACK stage inputs / outputs : ");
         if(instructions_already_done_in_pipeline[4] != null)
         {
             String type = instructions_already_done_in_pipeline[4].getType();
             switch(type)
             {
                 case "R" :
-                     System.out.print("inputs : ");
-                     System.out.print("register to be written into : R"+oldInputsOfWritebackStage[1]);
+                     System.out.println("inputs : register to be written into : R"+oldInputsOfWritebackStage[1]);
                      break;
                 case "I" :
                      int op= instructions_already_done_in_pipeline[4].getopcode();
@@ -332,21 +325,21 @@ public class Computer {
                      {
                        System.out.print("inputs : ");
                 	   System.out.print("register to be written into : R"+oldInputsOfWritebackStage[1]);
-                       System.out.print(" , value to be written is:  "+ oldInputsOfWritebackStage[2]);
+                       System.out.println(" , value to be written is:  "+ oldInputsOfWritebackStage[2]);
                      }
                      if(op==4 || op==11) 
                      {
-                        System.out.print("inputs : nothing , this is a I type instruction with with opcode " + op + " which doesn't perfrom a writeback");
+                        System.out.println("inputs : nothing , this is a I type instruction with with opcode " + op + " which doesn't perfrom a writeback");
                      }
                      break; 
                 case "J" :
-                     System.out.print("inputs : nothing , this is a J type instruction");
-
+                     System.out.println("inputs : nothing , this is a J type instruction");
                      break;
             }
-            System.out.println("(instruction) : 'hooooof !! I am finally free from this world !! these humans treat me as a mere piece of data ! '");
+            System.out.println(getRandomFunMessage());
         }
-        System.out.println("\n\nchanges in registerFile and Memory : ----------------------------");
+        System.out.println("----------------------------------------------");
+        System.out.println("changes in registerFile and Memory :");
         for(int i = 0 ; i < registerFile.length ; i++)
             if(registerFile[i] != oldRegisterFile[i])
                 System.out.println("R" + i + " changed from " + oldRegisterFile[i] + " to " + registerFile[i] + " in writeback stage");
@@ -592,10 +585,19 @@ public class Computer {
 	}
 	
 }
+    public String getRandomFunMessage(){
+        String[] messages = new String[5];
+        messages[0] = "(instruction) : now lets go to the next sta..... AAAAAAAHHHH NOOOO I AM BEING FLUSHED !!";
+        messages[1] = "(instruction) : 'hooooof !! I am finally free from this world !! these humans treat me as a mere piece of data ! '" ;
+        messages[2] = "(instruction) : finally out of this torture machine !! they are cutting me into pieces !! " ;
+        messages[3] = "(instruction) : goodbye crazy humans !! I hope not to see you again !! " ;
+        messages[4] = "(instruction) : now I am finally free !! but...wait...what am I going to do now ? how can a piece of data spent its life ? " ;
+        return messages[new Random().nextInt(messages.length)];
 
+    }
     public static void main(String[] args) throws ComputerException, IOException {
-    Computer computer = new Computer();
-    computer.run("assembly.txt");
+
+    new Computer().run("assembly.txt");
 }
 }   
 
