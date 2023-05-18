@@ -161,7 +161,9 @@ public class Computer {
         
         
     }
-    public Instruction fetchNextInstruction() {
+    public Instruction fetchNextInstruction() throws ComputerException {
+        if(PC > 1023)
+            throw new ComputerException("PC is out of bounds");
         if(PC >= instructions_count_in_memory)
             return null;
         return new Instruction(memory[PC++]);    
@@ -271,7 +273,7 @@ public class Computer {
                 case "J":
                     System.out.print("inputs : ");
                     System.out.print("ALU src1 (offset) = " + oldInputsOfExecuteStage[1]);
-                    System.out.println("ALU src2 (PC) = " + oldInputsOfExecuteStage[2]);
+                    System.out.println(" , ALU src2 (PC) = " + oldInputsOfExecuteStage[2]);
                     if(instructions_already_done_in_pipeline[2].timeInStage == 0)
                     {
                         int addrssToJumpTo=PC;

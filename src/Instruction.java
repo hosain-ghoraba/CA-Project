@@ -114,9 +114,9 @@ public  class Instruction {
         
         case 7: 
         computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
-        System.out.println(computer.execute_Stage_Inputs[1]);
-System.out.println(computer.execute_Stage_Inputs[2]);
-        System.out.println(computer.PC);
+        System.out.println("address = " + computer.execute_Stage_Inputs[1]);
+        System.out.println("pc (after subtracting 1) = " + computer.execute_Stage_Inputs[2]);
+        System.out.println("pc after applying jump logic = " + computer.PC);
        // computer.Instruction_in_Fetch_Stage=null;
        // computer.Instruction_in_Decode_Stage=null;
         computer.fetchWaitTime=2;
@@ -194,13 +194,24 @@ System.out.println(computer.execute_Stage_Inputs[2]);
 public static void main(String[] args) throws ComputerException {
 	
 
-	 String s="jmp 2";
-	 String s1="movi R19 66";
+    //  String s1="movi R19 66";
 	// System.out.println(s1.toUpperCase().split(" ",2)[0]);
+     //String s="jmp 16";
+     String s="JMP 0";
 	 Computer c = new Computer();
      c.trans(s);
-     String result = Long.toBinaryString( Integer.toUnsignedLong(c.instrans) | 0x100000000L ).substring(1);
-     System.out.println(result);
+     int jumpTranslation = c.instrans;
+     Instruction i = new Instruction(jumpTranslation);
+     System.out.println("opcode = " + i.getopcode());
+
+    //  System.out.println("translation in decimal = " + jumpTranslation);
+    //  String binaryRepresntion = Integer.toBinaryString(jumpTranslation);
+    //  System.out.println("translation in binary: " + binaryRepresntion);
+    //  System.out.println("length of binary representation = " + binaryRepresntion.length()); 
+
+
+    //  String result = Long.toBinaryString( Integer.toUnsignedLong(c.instrans) | 0x100000000L ).substring(1);
+    //  System.out.println(result);
      /*    
    
      c.registerFile[27]=70;
@@ -230,4 +241,10 @@ public String getType() throws ComputerException {
 public String toString() {
     return value + "";
 }
+
+// public String getAssemblyFormat() {
+
+
+// }
+
 }
