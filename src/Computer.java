@@ -75,7 +75,7 @@ public class Computer {
 
         instructions_already_done_in_pipeline[4] = Instruction_in_Writeback_Stage ;
         if(Instruction_in_Writeback_Stage != null)
-        {       
+       {        
             Instruction_in_Writeback_Stage.timeInStage++;
             if(Instruction_in_Writeback_Stage.timeInStage == 1)
             {
