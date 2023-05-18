@@ -193,7 +193,7 @@ System.out.println(computer.execute_Stage_Inputs[2]);
     }
 public static void main(String[] args) throws ComputerException {
 	
-	
+
 	 String s="jmp 2";
 	 String s1="movi R19 66";
 	// System.out.println(s1.toUpperCase().split(" ",2)[0]);
