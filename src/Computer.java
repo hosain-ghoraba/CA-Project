@@ -68,7 +68,7 @@ public class Computer {
         int[] oldMemory = memory.clone();     
         //--------------------------
         process_PipeLine();     
-        printAfterCycle(oldInputsOfExecuteStage, oldInputsOfMemoryStage, oldInputsOfWriteBackStage, oldRegisterFile, oldMemory);
+       // printAfterCycle(oldInputsOfExecuteStage, oldInputsOfMemoryStage, oldInputsOfWriteBackStage, oldRegisterFile, oldMemory);
 
     }   
     private void process_PipeLine() throws ComputerException {

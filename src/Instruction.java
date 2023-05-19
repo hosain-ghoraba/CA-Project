@@ -53,7 +53,7 @@ public  class Instruction {
             
             case 7: 
             	add=(value<<4)>>4;
-            	
+            	System.out.println(add);
                 computer.execute_Stage_Inputs[1]= add;
                 computer.execute_Stage_Inputs[2]=computer.PC;
                 break;
@@ -99,6 +99,7 @@ public  class Instruction {
         	//computer.Instruction_in_Fetch_Stage=null;
             //computer.Instruction_in_Decode_Stage=null;
         }
+        
         	
         	 break;
         case 5:
@@ -115,7 +116,7 @@ public  class Instruction {
         case 7: 
         computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
         System.out.println("address = " + computer.execute_Stage_Inputs[1]);
-        System.out.println("pc (after subtracting 1) = " + computer.execute_Stage_Inputs[2]);
+        System.out.println("pc (after subtracting 1) = " + (computer.execute_Stage_Inputs[2]-1));
         System.out.println("pc after applying jump logic = " + computer.PC);
        // computer.Instruction_in_Fetch_Stage=null;
        // computer.Instruction_in_Decode_Stage=null;

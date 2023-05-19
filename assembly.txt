@@ -1,6 +1,7 @@
-jmp 2
+//jmp 2
 MOVI R1 1
-MOVI R2 2
+MOVI R2 1
+beq r1 r2 2
 MOVI R3 3
 MOVI R4 4
 MOVI R5 5
