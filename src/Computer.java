@@ -13,6 +13,7 @@ public class Computer {
     int PC ;
     int currentCycle;
     int fetchWaitTime;
+    int instructionpipelined;
     
     
     Instruction[] instructions_already_done_in_pipeline;
@@ -45,6 +46,7 @@ public class Computer {
         memory_Stage_Inputs=new int[3];
         execute_Stage_Inputs=new int[5];
         writeBack_Stage_Inputs=new int[3];
+        instructionpipelined=0;
     }
 
     private void run(String filePath) throws ComputerException, IOException{
@@ -55,7 +57,8 @@ public class Computer {
         // while(PC < instructions_count_in_memory)
         //     for(int i = 0 ; i < 5 ; i++)             
         //         Tickle_Clock();
-       printFinalRequirements();    
+       printFinalRequirements();
+       System.out.println(instructionpipelined);
     }
     
     private void Tickle_Clock()throws ComputerException {
@@ -144,7 +147,9 @@ public class Computer {
 
         if(fetchWaitTime==0) 
         {
-            fetchWaitTime=1;
+        	instructionpipelined++;
+
+        	fetchWaitTime=1;
             Instruction_in_Fetch_Stage = fetchNextInstruction();
             instructions_already_done_in_pipeline[0] =  Instruction_in_Fetch_Stage ;
             Instruction_in_Decode_Stage=Instruction_in_Fetch_Stage;

@@ -96,10 +96,12 @@ public  class Instruction {
         if(getRegister(computer.execute_Stage_Inputs[1], computer)==getRegister(computer.execute_Stage_Inputs[2], computer)) {
         	computer.PC=computer.execute_Stage_Inputs[4]+computer.execute_Stage_Inputs[3];
         	branch=true;
+            computer.fetchWaitTime=2;
+
         	//computer.Instruction_in_Fetch_Stage=null;
             //computer.Instruction_in_Decode_Stage=null;
         }
-        
+        ////////jjjjjjjjjjjjjjjjjjjjjjj
         	
         	 break;
         case 5:
@@ -115,9 +117,9 @@ public  class Instruction {
         
         case 7: 
         computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
-        System.out.println("address = " + computer.execute_Stage_Inputs[1]);
-        System.out.println("pc (after subtracting 1) = " + (computer.execute_Stage_Inputs[2]-1));
-        System.out.println("pc after applying jump logic = " + computer.PC);
+      //  System.out.println("address = " + computer.execute_Stage_Inputs[1]);
+       // System.out.println("pc (after subtracting 1) = " + (computer.execute_Stage_Inputs[2]-1));
+       // System.out.println("pc after applying jump logic = " + computer.PC);
        // computer.Instruction_in_Fetch_Stage=null;
        // computer.Instruction_in_Decode_Stage=null;
         computer.fetchWaitTime=2;
