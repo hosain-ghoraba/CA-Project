@@ -140,13 +140,13 @@ public  class Instruction {
             computer.memory_Stage_Inputs[2]=res;; break;
         
         case 10: 
-        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3];
+        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3]+1024;
         	computer.memory_Stage_Inputs[1]=computer.execute_Stage_Inputs[1];
             computer.memory_Stage_Inputs[2]=res; 
         	break;
         
         case 11: 
-        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3];
+        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3]+1024;
         	computer.memory_Stage_Inputs[1]=getRegister(computer.execute_Stage_Inputs[1], computer);
             computer.memory_Stage_Inputs[2]=res;
         	break;
