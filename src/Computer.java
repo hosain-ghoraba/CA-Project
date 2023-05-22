@@ -52,9 +52,13 @@ public class Computer {
     private void run(String filePath) throws ComputerException, IOException{
         loadProgramIntoMemory(filePath);
         int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );
-        while(currentCycle < maxClocks)
-            Tickle_Clock();    
-        // while(PC < instructions_count_in_memory)
+   
+        while(true) {
+            Tickle_Clock();   
+        if(Instruction_in_Fetch_Stage==null&&Instruction_in_Decode_Stage==null& Instruction_in_Execute_Stage==null &&Instruction_in_Memory_Stage==null&& Instruction_in_Writeback_Stage==null)
+        
+        {   break;  }  	}
+        	// while(PC < instructions_count_in_memory)
         //     for(int i = 0 ; i < 5 ; i++)             
         //         Tickle_Clock();
        printFinalRequirements();
@@ -71,7 +75,7 @@ public class Computer {
         int[] oldMemory = memory.clone();     
         //--------------------------
         process_PipeLine();     
-       // printAfterCycle(oldInputsOfExecuteStage, oldInputsOfMemoryStage, oldInputsOfWriteBackStage, oldRegisterFile, oldMemory);
+       printAfterCycle(oldInputsOfExecuteStage, oldInputsOfMemoryStage, oldInputsOfWriteBackStage, oldRegisterFile, oldMemory);
 
     }   
     private void process_PipeLine() throws ComputerException {
@@ -145,7 +149,7 @@ public class Computer {
         }
         
 
-        if(fetchWaitTime==0) 
+        if(fetchWaitTime==0 && PC<instructions_count_in_memory ) 
         {
         	instructionpipelined++;
 
