@@ -14,6 +14,7 @@ public class Computer {
     int currentCycle;
     int fetchWaitTime;
     int instructionpipelined;
+    int oldvalue;
     
     
     Instruction[] instructions_already_done_in_pipeline;
@@ -40,6 +41,7 @@ public class Computer {
         PC = 0;
         currentCycle = 0 ;
         fetchWaitTime = 0;
+        oldvalue=-1;
         instructions_already_done_in_pipeline = new Instruction[5];
       //  fetch=new int[5];
        // decode=new int[5];
@@ -87,19 +89,7 @@ public class Computer {
             if(Instruction_in_Writeback_Stage.timeInStage == 1)
             {
                 Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);
-               if(Instruction_in_Writeback_Stage.getopcode()==7) {//handling flush of instruction in case of jump
-            	   Instruction_in_Decode_Stage=null;
-            	   Instruction_in_Execute_Stage=null;
-            	   //Instruction_in_Memory_Stage=null;
-            	   
-            	   
-               }
-               if(Instruction_in_Writeback_Stage.getopcode()==4) {
-            	   if(Instruction_in_Writeback_Stage.branch) {
-            		   Instruction_in_Decode_Stage=null;
-                	   Instruction_in_Execute_Stage=null;
-            	   }
-               }
+           
                 Instruction_in_Writeback_Stage = null;
             }
 
@@ -111,6 +101,19 @@ public class Computer {
             Instruction_in_Memory_Stage.timeInStage++;
             if(Instruction_in_Memory_Stage.timeInStage == 1)
             {
+                if(Instruction_in_Memory_Stage.getopcode()==7) {//handling flush of instruction in case of jump
+             	   Instruction_in_Decode_Stage=null;
+             	   Instruction_in_Execute_Stage=null;
+             	   //Instruction_in_Memory_Stage=null;
+             	   
+             	   
+                }
+                if(Instruction_in_Memory_Stage.getopcode()==4) {
+             	   if(Instruction_in_Memory_Stage.branch) {
+             		   Instruction_in_Decode_Stage=null;
+                 	   Instruction_in_Execute_Stage=null;
+             	   }
+                }
                 Instruction_in_Memory_Stage.execute_in_MEMORY_stage(this);
                 Instruction_in_Writeback_Stage = Instruction_in_Memory_Stage;
                 Instruction_in_Writeback_Stage.timeInStage = 0;
@@ -175,7 +178,14 @@ public class Computer {
             throw new ComputerException("PC is out of bounds");
         if(PC >= instructions_count_in_memory)
             return null;
-        return new Instruction(memory[PC++]);    
+        if(oldvalue==-1)
+        return new Instruction(memory[PC++]);   
+        else {
+           Instruction x= new Instruction(memory[oldvalue+1]);   
+        oldvalue=-1; 
+        return x;
+        }
+
     }   
     public void printFinalRequirements() // things that are required to be printed after the last cycle
     {

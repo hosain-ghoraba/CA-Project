@@ -94,9 +94,10 @@ public  class Instruction {
         
         case 4:
         if(getRegister(computer.execute_Stage_Inputs[1], computer)==getRegister(computer.execute_Stage_Inputs[2], computer)) {
+        	computer.oldvalue=computer.execute_Stage_Inputs[4];
         	computer.PC=computer.execute_Stage_Inputs[4]+computer.execute_Stage_Inputs[3];
         	branch=true;
-            computer.fetchWaitTime=2;
+            //computer.fetchWaitTime=2;
 
         	//computer.Instruction_in_Fetch_Stage=null;
             //computer.Instruction_in_Decode_Stage=null;
@@ -116,13 +117,14 @@ public  class Instruction {
         break;
         
         case 7: 
-        computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
+        computer.oldvalue=computer.execute_Stage_Inputs[2];
+        	computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1];
       //  System.out.println("address = " + computer.execute_Stage_Inputs[1]);
        // System.out.println("pc (after subtracting 1) = " + (computer.execute_Stage_Inputs[2]-1));
        // System.out.println("pc after applying jump logic = " + computer.PC);
        // computer.Instruction_in_Fetch_Stage=null;
        // computer.Instruction_in_Decode_Stage=null;
-        computer.fetchWaitTime=2;
+        
          break;
         
         case 8: 
@@ -140,13 +142,13 @@ public  class Instruction {
             computer.memory_Stage_Inputs[2]=res;; break;
         
         case 10: 
-        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3]+1024;
+        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3];
         	computer.memory_Stage_Inputs[1]=computer.execute_Stage_Inputs[1];
             computer.memory_Stage_Inputs[2]=res; 
         	break;
         
         case 11: 
-        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3]+1024;
+        	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3];
         	computer.memory_Stage_Inputs[1]=getRegister(computer.execute_Stage_Inputs[1], computer);
             computer.memory_Stage_Inputs[2]=res;
         	break;

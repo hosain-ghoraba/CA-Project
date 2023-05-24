@@ -1,4 +1,5 @@
-jeq r1 r2 3
+jmp 4
+//jeq r1 r2 3
 add r2 r2 r2
 add r1 r1 r3
 add r3 r4 r4
