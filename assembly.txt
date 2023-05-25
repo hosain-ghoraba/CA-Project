@@ -1,13 +1,15 @@
-/MOVI R1 1
-/MOVI R2 2
-jmp 4
-MOVI R7 5
-MOVI R8 5
-MOVI R9 5
-MOVI R10 10
-movm r10 r1 0
-movr r26 r1 0
-/MOVI R11 11
+MOVI R1 1
+MOVI R2 2
+MOVI R3 3
+MOVI R4 4
+/beq r2 r4 2
+/add r2 r2 r1
+/jmp -3
+/movi r5 5
+
+
+
+
 /MOVI R12 12
 /MOVI R13 13
 /MOVI R10 5

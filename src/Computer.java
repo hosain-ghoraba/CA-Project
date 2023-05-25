@@ -52,7 +52,7 @@ public class Computer {
         while(true) 
         {
         Tickle_Clock();   
-        if(Instruction_in_Fetch_Stage==null&&Instruction_in_Decode_Stage==null&& Instruction_in_Execute_Stage==null &&Instruction_in_Memory_Stage==null&& Instruction_in_Writeback_Stage==null)
+        if(Instruction_in_Fetch_Stage==null && Instruction_in_Decode_Stage==null && Instruction_in_Execute_Stage==null && Instruction_in_Memory_Stage==null && Instruction_in_Writeback_Stage==null)
             break;
         }
         printFinalRequirements();
@@ -161,15 +161,20 @@ public class Computer {
     }
     public Instruction fetchNextInstruction() throws ComputerException {
 
-        if(PC >= instructions_count_in_memory)
-            return null;
-        instructionpipelined++;    
         if(oldvalue==-1)
-             return new Instruction(memory[PC++]);   
+        {
+            if(PC >= instructions_count_in_memory)
+                return null;
+            instructionpipelined++;
+            return new Instruction(memory[PC++]);   
+        }
         else 
         {
+            if(oldvalue+1 >= instructions_count_in_memory)
+                return null;
             Instruction x= new Instruction(memory[oldvalue+1]);   
             oldvalue=-1; 
+            instructionpipelined++;
             return x;
         }
 
