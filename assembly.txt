@@ -1,26 +1,7 @@
 MOVI R1 1
-MOVI R2 2
+MOVI R2 1
+jmp 6
 MOVI R3 3
 MOVI R4 4
-/beq r2 r4 2
-/add r2 r2 r1
-/jmp -3
-/movi r5 5
-
-
-
-
-/MOVI R12 12
-/MOVI R13 13
-/MOVI R10 5
-/MOVI R11 5        
-//MOVI R12 5
-//MOVI R13 5
-//MOVI R14 5
-//MUL R3 R3 R2
-//LSR R5 R1 1
-//MOVM R1 R12 30
-//MOVR R6 R11 30
-
-
-
+MOVI R5 5
+MOVI R6 6

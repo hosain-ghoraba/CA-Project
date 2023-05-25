@@ -376,8 +376,8 @@ public class Computer {
     }
     private void loadProgramIntoMemory(String assemblyCode_filePath) throws IOException {
     	BufferedReader br = new BufferedReader(new FileReader(assemblyCode_filePath));
-        String line;
-        while (!(line = br.readLine()).equals("")) 
+        String line = br.readLine();
+        while (line != null && !line.equals("")) 
         {
             if(line.charAt(0) != '/') // if it is not a comment
             {
@@ -385,6 +385,7 @@ public class Computer {
                 System.out.println("instruction " + line + "   is translated to " + instrans + " and added to memory");
                 memory[instructions_count_in_memory++] = instrans;
             }
+            line = br.readLine();
         }
         br.close();
         
