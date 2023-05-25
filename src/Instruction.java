@@ -249,7 +249,7 @@ public String toString() {
     //return value + "";
     try 
     {
-        return getAssemblyFormat();
+        return value + " (" + getAssemblyFormat() + ")";
     } 
     catch (ComputerException e)
     {
