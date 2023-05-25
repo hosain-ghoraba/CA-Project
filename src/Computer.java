@@ -47,15 +47,23 @@ public class Computer {
         instructionpipelined=0;
     }
 
-    private void run(String filePath) throws ComputerException, IOException{
-        loadProgramIntoMemory(filePath);   
-        while(true) 
+    public void run(String filePath) {
+        try
         {
-        Tickle_Clock();   
-        if(Instruction_in_Fetch_Stage==null && Instruction_in_Decode_Stage==null && Instruction_in_Execute_Stage==null && Instruction_in_Memory_Stage==null && Instruction_in_Writeback_Stage==null)
-            break;
+            loadProgramIntoMemory(filePath);   
+            while(true) 
+            {
+            Tickle_Clock();   
+            if(Instruction_in_Fetch_Stage==null && Instruction_in_Decode_Stage==null && Instruction_in_Execute_Stage==null && Instruction_in_Memory_Stage==null && Instruction_in_Writeback_Stage==null)
+                break;
+            }
+            printFinalRequirements();
+
         }
-        printFinalRequirements();
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
     
     private void Tickle_Clock()throws ComputerException {
@@ -144,7 +152,6 @@ public class Computer {
         {
         	fetchWaitTime=1;
             Instruction_in_Fetch_Stage = fetchNextInstruction();
-            System.out.println("fetchtime :  "+fetchWaitTime+ "  pc:  "+ PC);
             instructions_already_done_in_pipeline[0] =  Instruction_in_Fetch_Stage ;
             Instruction_in_Decode_Stage=Instruction_in_Fetch_Stage;
             if(Instruction_in_Decode_Stage != null)
@@ -633,5 +640,6 @@ public class Computer {
         computer.run("assembly.txt");
     
 }
+
 }   
 
