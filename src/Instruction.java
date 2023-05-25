@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public  class Instruction {
 //can add type of instruction 
@@ -52,7 +53,7 @@ public  class Instruction {
                  
             
             case 7: 
-            	add=(value<<4)>>4;
+            	add=(value<<4)>>>4;
             //	System.out.println(add);
                 computer.execute_Stage_Inputs[1]= add;
                 computer.execute_Stage_Inputs[2]=computer.PC; 
@@ -118,8 +119,7 @@ public  class Instruction {
         
         case 7: 
         computer.oldvalue=computer.execute_Stage_Inputs[2];
-        	//computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1]; 
-        computer.PC = computer.execute_Stage_Inputs[1]; // without adding old pc
+        computer.PC=(((computer.execute_Stage_Inputs[2]-1)>>>28)<<28)+computer.execute_Stage_Inputs[1]; 
       //  System.out.println("address = " + computer.execute_Stage_Inputs[1]);
        // System.out.println("pc (after subtracting 1) = " + (computer.execute_Stage_Inputs[2]-1));
        // System.out.println("pc after applying jump logic = " + computer.PC);
@@ -140,7 +140,8 @@ public  class Instruction {
         case 9: 
         	res=getRegister(computer.execute_Stage_Inputs[2], computer)>>>computer.execute_Stage_Inputs[4];
         	computer.memory_Stage_Inputs[1]=computer.execute_Stage_Inputs[1];
-            computer.memory_Stage_Inputs[2]=res;; break;
+            computer.memory_Stage_Inputs[2]=res;
+            break;
         
         case 10: 
         	res=getRegister(computer.execute_Stage_Inputs[2], computer)+computer.execute_Stage_Inputs[3];
@@ -245,12 +246,67 @@ public String getType() throws ComputerException {
 }
 
 public String toString() {
-    return value + "";
+    //return value + "";
+    try 
+    {
+        return getAssemblyFormat();
+    } 
+    catch (ComputerException e)
+    {
+        e.printStackTrace();
+    }
+    return null;
 }
 
-// public String getAssemblyFormat() {
-
-
-// }
+ public String getAssemblyFormat() throws ComputerException {
+   ArrayList<String> instructionParts = new ArrayList<String>();
+   switch(getopcode())
+   {
+    case 0 : instructionParts.add("ADD"); break;
+    case 1 : instructionParts.add("SUB"); break;
+    case 2 : instructionParts.add("MUL"); break;
+    case 3 : instructionParts.add("MOVI"); break;
+    case 4 : instructionParts.add("JEQ"); break;
+    case 5 : instructionParts.add("AND"); break;
+    case 6 : instructionParts.add("XORI"); break;
+    case 7 : instructionParts.add("JMP"); break;
+    case 8 : instructionParts.add("LSL"); break;
+    case 9 : instructionParts.add("LSR"); break;
+    case 10 : instructionParts.add("MOVR"); break;
+    case 11 : instructionParts.add("MOVM"); break;
+    default: throw new ComputerException("opcode for instruction " + value + " is not valid");
+   }
+   switch(getopcode())
+   {
+    case 0 : case 1 : case 2 : case 5 :
+        instructionParts.add("R" + ((value<<4)>>>27));
+        instructionParts.add("R" + ((value<<9)>>>27));
+        instructionParts.add("R" + ((value<<14)>>>27));
+        break;
+    case 8 : case 9 :
+        instructionParts.add("R" + ((value<<4)>>>27));
+        instructionParts.add("R" + ((value<<9)>>>27));
+        instructionParts.add("" + ((value<<19)>>>19));
+        break;  
+    case 3 :
+        instructionParts.add("R" + ((value<<4)>>>27));
+        instructionParts.add("" + ((value<<14)>>14));
+        break;
+    case 4 : case 6 : case 10 : case 11 :
+        instructionParts.add("R" + ((value<<4)>>>27));
+        instructionParts.add("R" + ((value<<9)>>>27));
+        instructionParts.add("" + ((value<<14)>>14));
+        break;
+    case 7 : 
+        instructionParts.add("" + ((value<<4)>>>4));
+        break;
+    default : throw new ComputerException("opcode for instruction " + value + " is not valid");
+    }
+    String instruction = "";
+    for(int i = 0 ; i < instructionParts.size()-1 ; i++)
+        instruction += instructionParts.get(i) + " ";   
+    instruction += instructionParts.get(instructionParts.size()-1);
+    return instruction;
+ }
 
 }

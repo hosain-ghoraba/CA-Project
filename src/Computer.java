@@ -144,6 +144,7 @@ public class Computer {
         {
         	fetchWaitTime=1;
             Instruction_in_Fetch_Stage = fetchNextInstruction();
+            System.out.println("fetchtime :  "+fetchWaitTime+ "  pc:  "+ PC);
             instructions_already_done_in_pipeline[0] =  Instruction_in_Fetch_Stage ;
             Instruction_in_Decode_Stage=Instruction_in_Fetch_Stage;
             if(Instruction_in_Decode_Stage != null)
@@ -171,7 +172,10 @@ public class Computer {
         else 
         {
             if(oldvalue+1 >= instructions_count_in_memory)
-                return null;
+            {
+                oldvalue=-1;
+            	return null;
+            }
             Instruction x= new Instruction(memory[oldvalue+1]);   
             oldvalue=-1; 
             instructionpipelined++;
