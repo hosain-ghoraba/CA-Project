@@ -16,10 +16,8 @@ public class Computer {
     int instructionpipelined;
     int oldvalue;
     
-    
     Instruction[] instructions_already_done_in_pipeline;
     int instrans; //instruction to be translated
-
     
     Instruction Instruction_in_Fetch_Stage;
     Instruction Instruction_in_Decode_Stage;
@@ -31,8 +29,6 @@ public class Computer {
     int[] execute_Stage_Inputs;
     int[] memory_Stage_Inputs;
     int[] writeBack_Stage_Inputs;
-
-
     
 
     public Computer() {
@@ -52,19 +48,14 @@ public class Computer {
     }
 
     private void run(String filePath) throws ComputerException, IOException{
-        loadProgramIntoMemory(filePath);
-        int maxClocks = 7 + ( (instructions_count_in_memory-1) * 2 );
-   
-        while(true) {
-            Tickle_Clock();   
-        if(Instruction_in_Fetch_Stage==null&&Instruction_in_Decode_Stage==null& Instruction_in_Execute_Stage==null &&Instruction_in_Memory_Stage==null&& Instruction_in_Writeback_Stage==null)
-        
-        {   break;  }  	}
-        	// while(PC < instructions_count_in_memory)
-        //     for(int i = 0 ; i < 5 ; i++)             
-        //         Tickle_Clock();
-       printFinalRequirements();
-       System.out.println(instructionpipelined);
+        loadProgramIntoMemory(filePath);   
+        while(true) 
+        {
+        Tickle_Clock();   
+        if(Instruction_in_Fetch_Stage==null&&Instruction_in_Decode_Stage==null&& Instruction_in_Execute_Stage==null &&Instruction_in_Memory_Stage==null&& Instruction_in_Writeback_Stage==null)
+            break;
+        }
+        printFinalRequirements();
     }
     
     private void Tickle_Clock()throws ComputerException {
@@ -88,8 +79,7 @@ public class Computer {
             Instruction_in_Writeback_Stage.timeInStage++;
             if(Instruction_in_Writeback_Stage.timeInStage == 1)
             {
-                Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);
-           
+                Instruction_in_Writeback_Stage.execute_in_WRITEBACK_stage(this);   
                 Instruction_in_Writeback_Stage = null;
             }
 
@@ -104,9 +94,7 @@ public class Computer {
                 if(Instruction_in_Memory_Stage.getopcode()==7) {//handling flush of instruction in case of jump
              	   Instruction_in_Decode_Stage=null;
              	   Instruction_in_Execute_Stage=null;
-             	   //Instruction_in_Memory_Stage=null;
-             	   
-             	   
+             	   //Instruction_in_Memory_Stage=null; 	   
                 }
                 if(Instruction_in_Memory_Stage.getopcode()==4) {
              	   if(Instruction_in_Memory_Stage.branch) {
@@ -152,10 +140,8 @@ public class Computer {
         }
         
 
-        if(fetchWaitTime==0 && PC<instructions_count_in_memory ) 
+        if(fetchWaitTime==0) 
         {
-        	instructionpipelined++;
-
         	fetchWaitTime=1;
             Instruction_in_Fetch_Stage = fetchNextInstruction();
             instructions_already_done_in_pipeline[0] =  Instruction_in_Fetch_Stage ;
@@ -174,16 +160,17 @@ public class Computer {
         
     }
     public Instruction fetchNextInstruction() throws ComputerException {
-        if(PC > 1023)
-            throw new ComputerException("PC is out of bounds");
+
         if(PC >= instructions_count_in_memory)
             return null;
+        instructionpipelined++;    
         if(oldvalue==-1)
-        return new Instruction(memory[PC++]);   
-        else {
-           Instruction x= new Instruction(memory[oldvalue+1]);   
-        oldvalue=-1; 
-        return x;
+             return new Instruction(memory[PC++]);   
+        else 
+        {
+            Instruction x= new Instruction(memory[oldvalue+1]);   
+            oldvalue=-1; 
+            return x;
         }
 
     }   
@@ -191,6 +178,8 @@ public class Computer {
     {
         System.out.println("\nEND OF PROGRAM ---------------------------------------------------------------------------------------------------------------------");
         System.out.println("Program finished execution after " + currentCycle + " cycles, following are the final values :");
+        System.out.println("instuction count in memory = " + instructions_count_in_memory);
+        System.out.println("instructions entered pipeline = " + instructionpipelined);
         System.out.println("PC : " + PC);
         for(int i = 0 ; i < registerFile.length ; i++)
             System.out.println("R" + i + " : " + registerFile[i]);
