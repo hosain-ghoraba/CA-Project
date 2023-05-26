@@ -199,8 +199,8 @@ public class Computer {
         System.out.println("PC : " + PC);
         for(int i = 0 ; i < registerFile.length ; i++)
             System.out.println("R" + i + " : " + registerFile[i]);
-        // for(int i = 0 ; i < memory.length ; i++)
-        //     System.out.println("Memory" + "[" + i + "]" + " : " + memory[i]);
+        for(int i = 0 ; i < memory.length ; i++)
+            System.out.println("Memory" + "[" + i + "]" + " : " + memory[i]);
     }
 
     public void printAfterCycle(int[] oldInputsOfExecuteStage, int[] oldInputsOfMemoryStage, int[] oldInputsOfWritebackStage, int[] oldRegisterFile, int[] oldMemory) throws ComputerException{
