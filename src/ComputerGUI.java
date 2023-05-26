@@ -24,9 +24,9 @@ public class ComputerGUI extends JFrame {
         inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
 
         // Create a "Select File" button
-        JButton selectFileButton = new JButton("Select a File to run :");
+        JButton selectFileButton = new JButton("Select a File to run (txt) :");
         selectFileButton.setFont(new Font("Arial", Font.BOLD, 14));
-        selectFileButton.setPreferredSize(new Dimension(180, 30));
+        selectFileButton.setPreferredSize(new Dimension(220, 30));
         selectFileButton.addActionListener(new SelectFileButtonListener());
 
         // Add the button to the input panel
